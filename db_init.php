@@ -1,19 +1,24 @@
 <?php
-require_once 'config.php';
+
+// Carga la configuración y las funciones necesarias del proyecto
+require_once __DIR__ . '/bootstrap.php';
 
 try {
-  // Crear conexión PDO con SQLite
-  $pdo = new PDO("sqlite:" . DB_PATH);
+  // Conexión e inicialización de las bases de datos
+  $securedeskPdo = getConnection(SECUREDESK_DB_PATH);
+  initSecuredeskDatabase($securedeskPdo);
 
-  // Configurar errores para que lance excepciones
-  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  $usersPdo = getConnection(USERS_DB_PATH);
+  initUsersDatabase($usersPdo);
 
-  // Consulta simple de prueba
-  $result = $pdo->query("SELECT sqlite_version()");
+  $ticketsPdo = getConnection(TICKETS_DB_PATH);
+  initTicketsDatabase($ticketsPdo);
 
-  $version = $result->fetchColumn();
+  echo "✅ Bases de datos inicializadas correctamente.";
 
-  echo "✅ Conexión correcta. Versión de SQLite: " . $version;
+} catch (RuntimeException $e) {
+  echo "❌ Error de entorno: " . $e->getMessage();
+  
 } catch (PDOException $e) {
-  echo "❌ Error de conexión: " . $e->getMessage();
+  echo "❌ Error de base de datos: " . $e->getMessage();
 }
