@@ -17,7 +17,7 @@
 2. **Access the Application**
 
 - Open your browser
-- Clone the repository into the `xampp/htdocs` folder so the `securedesk-dam` directory is created there
+- Clone the repository into the `xampp/htdocs` folder. If the folder name is different, **rename it to `securedesk-dam`**, since the application URL is hardcoded as `http://localhost/securedesk-dam/` in the configuration.
 - Navigate to `http://localhost/securedesk-dam` in your browser
 
 3. **Initial Configuration**

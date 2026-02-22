@@ -1,0 +1,14 @@
+RewriteEngine On
+
+# 1. Desactivar listado de directorios
+Options -Indexes
+
+# 2. Bloquear carpetas privadas
+RewriteRule ^(app|config|db|docs)/ - [F,L]
+
+# 3. Permitir SOLO archivos reales (css, js, images, etc.)
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# 4. Indicamos el punto de inicio de nuestra aplicación
+RewriteRule ^ public/index.php [L]
