@@ -24,6 +24,7 @@ function getConnection(string $dbPath): PDO
 
   // Activa las claves foráneas en SQLite
   $pdo->exec('PRAGMA foreign_keys = ON');
+  $pdo->exec("PRAGMA encoding = 'UTF-8'");
 
   // Devuelve el objeto PDO listo para usar
   return $pdo;
