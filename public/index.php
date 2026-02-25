@@ -1,9 +1,15 @@
 <?php
-// Definir la ruta raíz del proyecto
+// Definir la ruta raíz
 define('ROOT', realpath(__DIR__ . '/../') . '/');
 
-// Cargar configuración y autoload
-require_once ROOT . 'config/config.php';
+// Cargar bootstrap
+require_once ROOT . 'config/bootstrap.php';
+
+use app\controllers\AppController;
+
+$app = new AppController();
+$viewPath = $app->handleRequest();
+
 
 ?>
 <!DOCTYPE html>
@@ -16,11 +22,11 @@ require_once ROOT . 'config/config.php';
 <body>
   <?php require_once ROOT . "app/views/fragments/header.php"; ?>
   <section>
-    <div>
+    <div class="nav-container">
       <?php require_once ROOT . "app/views/fragments/navBar.php"; ?>
     </div>
     <div class="dinamic-container">
-      <?php require_once ROOT . "app/views/content/home-view.php"; ?>
+      <?php require_once $viewPath; ?>
     </div>
   </section>
 </body>

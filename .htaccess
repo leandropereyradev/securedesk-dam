@@ -11,4 +11,4 @@ RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule ^ - [L]
 
 # 4. Indicamos el punto de inicio de nuestra aplicación
-RewriteRule ^ public/index.php [L]
+RewriteRule ^(.*)$ public/index.php?views=$1 [L,QSA]

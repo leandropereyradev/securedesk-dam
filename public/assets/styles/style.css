@@ -65,17 +65,84 @@ section {
 }
 
 /* Estilos para la barra de navegación */
+.nav-container {
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 80px);
+}
+
 nav {
   background-color: #1f1f1f;
   padding: 10px;
   padding-top: 0;
   display: flex;
   flex-direction: column;
-  height: 100vh;
   width: 200px;
 }
 
 /* Estilos para el contenido dinámico */
 .dinamic-container {
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+/* Estilos Login */
+.login-container {
+  max-width: 420px;
+  height: 450px;
+  margin: 4rem auto;
+  padding: 2rem;
+  background: #131212;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.login-container h2 {
+  margin-bottom: 20px;
+  font-size: 50px;
+  color: #f5f5f0;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  justify-content: space-between;
+}
+
+.login-form label {
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.login-form input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+.login-container .error-message {
+  color: #ff4d4f;
+  text-align: center;
+  font-size: 1rem;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
