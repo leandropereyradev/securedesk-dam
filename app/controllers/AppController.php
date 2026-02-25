@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\controllers\ViewsController;
+use app\controllers\SessionController;
 use app\controllers\AuthController;
 
 class AppController
@@ -24,6 +25,11 @@ class AppController
     // Login: POST a login
     if ($this->viewName === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
       AuthController::login();
+    }
+
+    // Logout: GET a logout
+    if ($this->viewName === 'logout') {
+      SessionController::logout();
     }
 
     // Obtener ruta de la vista

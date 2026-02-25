@@ -39,6 +39,11 @@ class AuthController
         exit;
       }
 
+      // ✔ Login exitoso - guardamos datos en sesión
+      $_SESSION['user_id']  = $user['id'];
+      $_SESSION['username'] = $user['username'];
+      $_SESSION['role']     = $user['role'];
+
       header('Location: dashboard');
       exit;
     } catch (\PDOException $e) {
