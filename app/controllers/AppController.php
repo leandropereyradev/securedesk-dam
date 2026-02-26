@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\controllers\ViewsController;
 use app\controllers\SessionController;
 use app\controllers\AuthController;
+use app\middlewares\RoleMiddleware;
 
 class AppController
 {
@@ -31,6 +32,9 @@ class AppController
     if ($this->viewName === 'logout') {
       SessionController::logout();
     }
+
+    // Control de permisos para vistas
+    RoleMiddleware::check($this->viewName);
 
     // Obtener ruta de la vista
     $viewPath = $this->viewsController->getViewsController($this->viewName);

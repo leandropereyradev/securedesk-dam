@@ -6,7 +6,15 @@ class ViewsModel
 {
   protected function getViewsModel(string $view): ?string
   {
-    $whitelist = ['home', 'login', "dashboard", "tickets"];
+    $whitelist = [
+      'home',
+      'login',
+      "dashboard",
+      "tickets",
+      "ticket-edit",
+      "ticket-create",
+      "users"
+    ];
 
     if (!in_array($view, $whitelist, true)) {
       return null;
