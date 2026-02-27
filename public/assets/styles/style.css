@@ -31,6 +31,28 @@ body {
   background-color: #4b4b4b;
 }
 
+li.active {
+  position: relative;
+  background-color: #2b2b2b;
+}
+
+li.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 10px;
+  height: 100%;
+  background-color: #5478ee;
+  border-radius: 4px 0 0 4px;
+}
+
+.submenu-button {
+  width: 80%;
+  margin-left: 35px;
+  list-style: none;
+}
+
 /* Estilos para el encabezado */
 header {
   background-color: #1f1f1f;
@@ -45,6 +67,11 @@ header {
 header h1 {
   font-size: 24px;
   color: #f5f5f0;
+}
+
+.link-logo {
+  text-decoration: none;
+  color: inherit;
 }
 
 .logo-container {
@@ -85,8 +112,8 @@ nav {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: start;
+  align-items: start;
   width: 100%;
 }
 

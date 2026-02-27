@@ -13,7 +13,8 @@ class ViewsModel
       "tickets",
       "ticket-edit",
       "ticket-create",
-      "users"
+      "users",
+      "profile"
     ];
 
     if (!in_array($view, $whitelist, true)) {
