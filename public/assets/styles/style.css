@@ -173,3 +173,97 @@ nav {
   align-items: center;
   justify-content: center;
 }
+
+/* Estilos para el formulario de tickets */
+
+.tickets-container {
+  width: 90%;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #131212;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.13);
+}
+
+.tickets-container h1 {
+  margin-bottom: 40px;
+  font-size: 50px;
+  color: #f5f5f0;
+}
+
+.tickets-container table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #1e202b;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table th,
+table td {
+  padding: 8px 12px;
+  border: 0 0 1px 0 solid #ccc;
+  text-align: left;
+}
+
+table th {
+  background-color: #333;
+  color: white;
+}
+
+.ticket-filters {
+  display: flex;
+  gap: 1rem; /* Espacio entre filtros */
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  font-family: sans-serif;
+}
+
+.ticket-filters label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  color: #f0f0f0; /* Texto claro */
+}
+
+.ticket-filters select {
+  margin-top: 0.3rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background-color: #1e202b; /* Combina con las filas pares */
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.ticket-filters select:focus {
+  outline: none;
+  border-color: #888;
+}
+
+.ticket-filters button {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  background-color: #333;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 25px;
+}
+
+.ticket-filters button:hover {
+  background-color: #555;
+}
+
+.ticket-filters button:active {
+  background-color: #777;
+}
