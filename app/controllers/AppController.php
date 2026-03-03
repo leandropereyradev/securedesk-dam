@@ -6,6 +6,7 @@ use app\controllers\ViewsController;
 use app\controllers\SessionController;
 use app\controllers\AuthController;
 use app\middlewares\RoleMiddleware;
+use app\controllers\TicketsController;
 
 class AppController
 {
@@ -31,6 +32,11 @@ class AppController
     // Logout: GET a logout
     if ($this->viewName === 'logout') {
       SessionController::logout();
+    }
+
+    // ----- CREAR TICKET -----
+    if ($this->viewName === 'ticket-create' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+      TicketsController::create();
     }
 
     // Control de permisos para vistas

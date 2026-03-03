@@ -267,3 +267,60 @@ table th {
 .ticket-filters button:active {
   background-color: #777;
 }
+
+.ticket-create-container {
+  width: 60%;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #131212;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.13);
+}
+
+.ticket-create-form {
+  padding: 1.5rem;
+  background: #1e202b;
+  border-radius: 10px;
+  color: #f0f0f0;
+}
+
+.ticket-create-form h2 {
+  margin-bottom: 1rem;
+}
+
+.ticket-create-form label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.ticket-create-form input,
+.ticket-create-form textarea,
+.ticket-create-form select {
+  margin-top: 0.3rem;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background-color: #131212;
+  color: #fff;
+}
+
+.ticket-create-form input:focus,
+.ticket-create-form textarea:focus,
+.ticket-create-form select:focus {
+  outline: none;
+  border-color: #888;
+}
+
+.ticket-create-form button:hover {
+  background-color: #555;
+}
+
+.error-message {
+  background: #5a1a1a;
+  color: #fff;
+  padding: 0.5rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
