@@ -2,14 +2,10 @@
 
 namespace app\helpers;
 
-use app\controllers\SessionController;
-
 class PermissionHelper
 {
   public static function can(string $permission): bool
   {
-    SessionController::start();
-
     $role = $_SESSION['role'] ?? null;
     if (!$role) {
       return false;

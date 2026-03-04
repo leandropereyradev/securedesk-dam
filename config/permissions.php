@@ -19,12 +19,14 @@ return [
       'tickets',
       'ticket-create',
       'ticket-edit',
+      'ticket',
       'profile',
     ],
 
     'reader' => [
       'dashboard',
       'tickets',
+      'ticket',
       'profile',
     ],
   ],

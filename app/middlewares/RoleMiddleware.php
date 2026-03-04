@@ -2,8 +2,6 @@
 
 namespace app\middlewares;
 
-use app\controllers\SessionController;
-
 class RoleMiddleware
 {
   private static array $config;
@@ -18,8 +16,6 @@ class RoleMiddleware
   public static function check(string $viewName)
   {
     self::loadConfig();
-    SessionController::start();
-
     // Vistas públicas
     if (in_array($viewName, self::$config['public'], true)) {
       return;

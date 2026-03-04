@@ -22,11 +22,6 @@ return [
         'route' => 'ticket-create',
         'permission' => 'ticket-create',
       ],
-      [
-        'label' => 'Editar Ticket',
-        'route' => 'ticket-edit',
-        'permission' => 'ticket-edit',
-      ],
     ],
   ],
   [

@@ -6,6 +6,7 @@
       <th>Prioridad</th>
       <th>Asignado a</th>
       <th>Fecha de creación</th>
+      <th>Acciones</th>
     </tr>
   </thead>
   <tbody>
@@ -18,6 +19,13 @@
               ? 'Sin asignar'
               : htmlspecialchars($ticket['assigned_to_username']) ?></td>
         <td><?= htmlspecialchars($ticket['created_at']) ?></td>
+        <td>
+          <a
+            href="<?= APP_URL ?>ticket?id=<?= (int)$ticket['id'] ?>"
+            class="button">
+            Ver
+          </a>
+        </td>
       </tr>
     <?php endforeach; ?>
   </tbody>

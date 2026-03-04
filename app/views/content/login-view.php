@@ -1,9 +1,5 @@
 <?php
 
-use app\controllers\SessionController;
-
-SessionController::start();
-
 $error = $_SESSION['login_error'] ?? null;
 unset($_SESSION['login_error']);
 ?>
@@ -22,11 +18,11 @@ unset($_SESSION['login_error']);
       <input type="password" name="password" required>
     </div>
 
-    <div class="error-message">
-      <?php if ($error): ?>
+    <?php if ($error): ?>
+      <div class="error-message">
         <div><?= htmlspecialchars($error) ?></div>
-      <?php endif; ?>
-    </div>
+      </div>
+    <?php endif; ?>
 
     <button class="button" type="submit">Ingresar</button>
   </form>

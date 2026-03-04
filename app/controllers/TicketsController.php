@@ -2,8 +2,46 @@
 
 namespace app\controllers;
 
+use PDO;
+use InvalidArgumentException;
+use DateTime;
+use DateTimeZone;
+
 class TicketsController
 {
+  private static function convertToMadridTime(?string $utcTime): ?string
+  {
+    if (!$utcTime) return null;
+
+    $date = new DateTime($utcTime, new DateTimeZone('UTC'));
+    $date->setTimezone(new DateTimeZone('Europe/Madrid'));
+    return $date->format('d/m/Y H:i:s');
+  }
+
+  public static function getTicketById(PDO $pdo, int $ticketId): ?array
+  {
+    $sql = "
+            SELECT
+                t.*,
+                ua.username AS assigned_to_username
+            FROM tickets t
+            LEFT JOIN users ua ON t.assigned_to = ua.id
+            WHERE t.id = :id
+        ";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':id' => $ticketId]);
+
+    $ticket = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$ticket) return null;
+
+    $ticket['updated_at'] = self::convertToMadridTime($ticket['updated_at']);
+    $ticket['created_at'] = self::convertToMadridTime($ticket['created_at']);
+
+    return $ticket;
+  }
+
   public static function listAll(): array
   {
     SessionController::requireLogin();
@@ -47,7 +85,14 @@ class TicketsController
             ");
 
       $stmt->execute($params);
-      return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+      $tickets = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+      foreach ($tickets as &$ticket) {
+        $ticket['created_at'] = self::convertToMadridTime($ticket['created_at']);
+        $ticket['updated_at'] = self::convertToMadridTime($ticket['updated_at']);
+      }
+
+      return $tickets;
     } catch (\PDOException $e) {
       error_log('Error al listar tickets: ' . $e->getMessage());
       return [];
@@ -119,5 +164,57 @@ class TicketsController
       header('Location: tickets');
       exit;
     }
+  }
+
+  public static function updateTicket(PDO $pdo, int $ticketId, array $data): bool
+  {
+    $validStatus = ['new', 'in_process', 'resolved'];
+    $validPriority = ['low', 'medium', 'high', 'critical'];
+
+    $fields = [];
+    $params = [':id' => $ticketId];
+
+    if (isset($data['status'])) {
+      if (!in_array($data['status'], $validStatus)) {
+        throw new InvalidArgumentException("Status inválido: {$data['status']}");
+      }
+      $fields[] = 'status = :status';
+      $params[':status'] = $data['status'];
+    }
+
+    if (isset($data['priority'])) {
+      if (!in_array($data['priority'], $validPriority)) {
+        throw new InvalidArgumentException("Priority inválido: {$data['priority']}");
+      }
+      $fields[] = 'priority = :priority';
+      $params[':priority'] = $data['priority'];
+    }
+
+    if (isset($data['description'])) {
+      $fields[] = 'description = :description';
+      $params[':description'] = $data['description'];
+    }
+
+    if (array_key_exists('assigned_to', $data)) {
+      $assignedTo = $data['assigned_to'] === '' ? null : $data['assigned_to'];
+      $fields[] = 'assigned_to = :assigned_to';
+      $params[':assigned_to'] = $assignedTo;
+    }
+
+    // Nada que actualizar
+    if (empty($fields)) {
+      return false;
+    }
+
+    $fields[] = 'updated_at = CURRENT_TIMESTAMP';
+
+    $sql = "
+        UPDATE tickets
+        SET " . implode(', ', $fields) . "
+        WHERE id = :id
+    ";
+
+    $stmt = $pdo->prepare($sql);
+    return $stmt->execute($params);
   }
 }

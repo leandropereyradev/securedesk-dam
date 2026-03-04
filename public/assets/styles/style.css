@@ -324,3 +324,64 @@ table th {
   border-radius: 6px;
   margin-bottom: 1rem;
 }
+
+.ticket-card {
+  background-color: #2b2b2b;
+  border: 1px solid #5b5b5b;
+  border-radius: 4px;
+  padding: 15px;
+  margin: 20px 0;
+  color: #f5f5f0;
+}
+
+.ticket-card p {
+  margin: 25px 0;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.ticket-edit-container {
+  width: 60%;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #131212;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.13);
+}
+
+.ticket-edit-container form {
+  padding: 1.5rem;
+  background: #1e202b;
+  border-radius: 10px;
+  color: #f0f0f0;
+}
+
+.ticket-edit-container label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 4px;
+  color: #f5f5f0;
+}
+
+.ticket-edit-container select,
+textarea {
+  width: 100%;
+  padding: 8px;
+  background-color: #3b3b3b;
+  color: #f5f5f0;
+  border: 1px solid #5b5b5b;
+  border-radius: 4px;
+}
+
+.ticket-edit-container textarea {
+  resize: vertical;
+}
+
+.ticket-edit-container .actions {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}

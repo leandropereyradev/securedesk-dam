@@ -13,6 +13,7 @@ class ViewsModel
       "tickets",
       "ticket-edit",
       "ticket-create",
+      "ticket",
       "users",
       "profile"
     ];
