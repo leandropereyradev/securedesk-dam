@@ -11,3 +11,4 @@ define('SECUREDESK_DB_PATH', BASE_PATH . '/db/securedesk.sqlite');
 // Tablas de la base de datos
 define('USERS_DB_PATH', SECUREDESK_DB_PATH);
 define('TICKETS_DB_PATH', SECUREDESK_DB_PATH);
+define('ATTACHMENTS_DB_PATH', SECUREDESK_DB_PATH);

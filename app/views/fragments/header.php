@@ -16,7 +16,13 @@ $loggedIn = SessionController::isLoggedIn();
 
   <div>
     <?php if ($loggedIn): ?>
-      <a class="button" href="logout">Logout</a>
+      <div class="welcome-message">
+        <div>
+          <p>Nombre de usuario: <strong><?php echo htmlspecialchars($_SESSION['username']); ?></strong></p>
+          <p>Rol: <strong><?php echo $_SESSION['role']; ?></strong></p>
+        </div>
+        <a class="button" href="logout">Logout</a>
+      </div>
     <?php else: ?>
       <a class="button" href="login">Login</a>
     <?php endif; ?>

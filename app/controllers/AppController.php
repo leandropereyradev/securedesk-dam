@@ -8,6 +8,7 @@ use app\controllers\AuthController;
 use app\controllers\TicketsController;
 use app\controllers\UsersController;
 use app\middlewares\RoleMiddleware;
+use app\controllers\AttachmentsController;
 
 class AppController
 {
@@ -83,10 +84,18 @@ class AppController
   protected function ticketGet()
   {
     SessionController::requireLogin();
+    $pdo = getConnection(TICKETS_DB_PATH);
+
     $ticket = TicketsController::getTicketById(
-      getConnection(TICKETS_DB_PATH),
+      $pdo,
       (int)$_GET['id']
     );
+
+    $ticket['attachments'] = AttachmentsController::getAttachmentsByTicket(
+      $pdo,
+      (int)$_GET['id']
+    );
+
     $_SESSION['ticket'] = $ticket;
   }
 
@@ -116,5 +125,33 @@ class AppController
 
     header('Location: ' . APP_URL . 'ticket?id=' . (int)$_POST['ticket_id']);
     exit;
+  }
+
+  protected function uploadPost()
+  {
+    SessionController::requireLogin();
+
+    $pdo = getConnection(TICKETS_DB_PATH);
+
+    AttachmentsController::upload(
+      $pdo,
+      (int)$_POST['ticket_id']
+    );
+
+    header('Location: ' . APP_URL . 'ticket?id=' . (int)$_POST['ticket_id']);
+    exit;
+  }
+
+  // Descargar adjunto
+  protected function attachmentDownloadGet()
+  {
+    SessionController::requireLogin();
+
+    $pdo = getConnection(TICKETS_DB_PATH);
+
+    AttachmentsController::download(
+      $pdo,
+      (int)$_GET['id']
+    );
   }
 }

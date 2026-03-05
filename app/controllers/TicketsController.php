@@ -4,20 +4,10 @@ namespace app\controllers;
 
 use PDO;
 use InvalidArgumentException;
-use DateTime;
-use DateTimeZone;
+use app\helpers\DateHelper;
 
 class TicketsController
 {
-  private static function convertToMadridTime(?string $utcTime): ?string
-  {
-    if (!$utcTime) return null;
-
-    $date = new DateTime($utcTime, new DateTimeZone('UTC'));
-    $date->setTimezone(new DateTimeZone('Europe/Madrid'));
-    return $date->format('d/m/Y H:i:s');
-  }
-
   public static function getTicketById(PDO $pdo, int $ticketId): ?array
   {
     $sql = "
@@ -36,8 +26,8 @@ class TicketsController
 
     if (!$ticket) return null;
 
-    $ticket['updated_at'] = self::convertToMadridTime($ticket['updated_at']);
-    $ticket['created_at'] = self::convertToMadridTime($ticket['created_at']);
+    $ticket['updated_at'] = DateHelper::utcToMadrid($ticket['updated_at']);
+    $ticket['created_at'] = DateHelper::utcToMadrid($ticket['created_at']);
 
     return $ticket;
   }
@@ -88,8 +78,8 @@ class TicketsController
       $tickets = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
       foreach ($tickets as &$ticket) {
-        $ticket['created_at'] = self::convertToMadridTime($ticket['created_at']);
-        $ticket['updated_at'] = self::convertToMadridTime($ticket['updated_at']);
+        $ticket['created_at'] = DateHelper::utcToMadrid($ticket['created_at']);
+        $ticket['updated_at'] = DateHelper::utcToMadrid($ticket['updated_at']);
       }
 
       return $tickets;
