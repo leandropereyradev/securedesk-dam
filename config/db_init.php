@@ -9,6 +9,7 @@ try {
   initUsersDatabase($pdo);
   initTicketsDatabase($pdo);
   initAttachmentsDatabase($pdo);
+  initTicketCommentsDatabase($pdo);
 
   // Insertar usuarios iniciales si no existen
   createInitialUsers($pdo);
