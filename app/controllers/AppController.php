@@ -74,6 +74,15 @@ class AppController
     SessionController::logout();
   }
 
+  // Listar tickets GET
+  protected function ticketsGet()
+  {
+    SessionController::requireLogin();
+
+    $tickets = TicketsController::listAll();
+    $_SESSION['tickets'] = $tickets;
+  }
+
   // Crear ticket POST
   protected function ticketCreatePost()
   {
@@ -127,6 +136,7 @@ class AppController
     exit;
   }
 
+  // Subir adjunto POST
   protected function uploadPost()
   {
     SessionController::requireLogin();
@@ -153,5 +163,21 @@ class AppController
       $pdo,
       (int)$_GET['id']
     );
+  }
+
+  // Agregar comentario POST
+  protected function commentAddPost()
+  {
+    SessionController::requireLogin();
+
+    $pdo = getConnection(TICKETS_DB_PATH);
+
+    TicketCommentsController::addComment(
+      $pdo,
+      $_POST
+    );
+
+    header('Location: ' . APP_URL . 'ticket?id=' . (int)$_POST['ticket_id']);
+    exit;
   }
 }

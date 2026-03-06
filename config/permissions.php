@@ -21,6 +21,7 @@ return [
       'ticket-edit',
       'ticket',
       'profile',
+      'comment-add',
     ],
 
     'reader' => [

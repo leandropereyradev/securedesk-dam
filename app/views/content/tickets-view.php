@@ -1,12 +1,10 @@
 <?php
 
 use app\controllers\SessionController;
-use app\controllers\TicketsController;
 
 SessionController::requireLogin();
 
-// Obtener tickets
-$tickets = TicketsController::listAll();
+$tickets = $_SESSION['tickets'] ?? [];
 ?>
 
 <div class="tickets-container">

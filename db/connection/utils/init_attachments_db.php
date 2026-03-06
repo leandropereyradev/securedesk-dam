@@ -12,7 +12,7 @@ function initAttachmentsDatabase(PDO $pdo): void
         uploaded_by INTEGER NOT NULL,
         uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         
-        FOREIGN KEY(ticket_id) REFERENCES tickets(id),
+        FOREIGN KEY(ticket_id) REFERENCES tickets(id) ON DELETE CASCADE,
         FOREIGN KEY(uploaded_by) REFERENCES users(id)
     )";
 

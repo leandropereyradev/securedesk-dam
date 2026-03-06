@@ -332,6 +332,11 @@ table th {
   margin-bottom: 1rem;
 }
 
+.ticket-details-container {
+  display: flex;
+  gap: 3rem;
+}
+
 .ticket-card {
   background-color: #2b2b2b;
   border: 1px solid #5b5b5b;
@@ -348,6 +353,16 @@ table th {
 .actions {
   display: flex;
   gap: 10px;
+}
+
+.comments-section form textarea {
+  margin-top: 10px;
+  padding: 8px;
+  background-color: #3b3b3b;
+  color: #f5f5f0;
+  border: 1px solid #5b5b5b;
+  border-radius: 4px;
+  width: 500px;
 }
 
 .ticket-edit-container {

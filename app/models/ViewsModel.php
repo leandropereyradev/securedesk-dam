@@ -16,7 +16,8 @@ class ViewsModel
       "ticket",
       "users",
       "profile",
-      "upload"
+      "upload",
+      "comment-add"
     ];
 
     if (!in_array($view, $whitelist, true)) {
