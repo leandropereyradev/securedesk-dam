@@ -28,4 +28,27 @@ class TicketCommentsController
       ':comment'   => $comment
     ]);
   }
+
+  public static function listAll(PDO $pdo, int $ticketId): array
+  {
+
+    $sql = "
+        SELECT 
+            tc.id,
+            tc.comment,
+            tc.created_at,
+            u.username
+        FROM ticket_comments tc
+        INNER JOIN users u ON tc.user_id = u.id
+        WHERE tc.ticket_id = :ticket_id
+        ORDER BY tc.created_at ASC
+    ";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+      ':ticket_id' => $ticketId
+    ]);
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
 }

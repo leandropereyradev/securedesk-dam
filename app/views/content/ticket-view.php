@@ -2,6 +2,7 @@
 
 $ticket = $_SESSION['ticket'] ?? null;
 $user = $_SESSION['user'] ?? null;
+$comments = $ticket['comments'] ?? [];
 ?>
 
 <h1>Detalle del Ticket</h1>
@@ -21,6 +22,8 @@ $user = $_SESSION['user'] ?? null;
 
     <?php require_once ROOT . "app/views/fragments/ticket-comment-form.php"; ?>
 
-  </div>
+    <?php require_once ROOT . "app/views/fragments/ticket-comments.php"; ?>
+
+</div>
 
 </div>

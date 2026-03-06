@@ -105,6 +105,11 @@ class AppController
       (int)$_GET['id']
     );
 
+    $ticket['comments'] = TicketCommentsController::listAll(
+      $pdo,
+      (int)$_GET['id']
+    );
+
     $_SESSION['ticket'] = $ticket;
   }
 
