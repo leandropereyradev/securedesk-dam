@@ -24,6 +24,8 @@ $comments = $ticket['comments'] ?? [];
 
     <?php require_once ROOT . "app/views/fragments/ticket-comments.php"; ?>
 
-</div>
+    <?php require_once ROOT . "app/views/fragments/ticket-changes-history.php"; ?>
+
+  </div>
 
 </div>

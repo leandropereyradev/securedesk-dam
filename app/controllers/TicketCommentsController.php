@@ -41,7 +41,7 @@ class TicketCommentsController
         FROM ticket_comments tc
         INNER JOIN users u ON tc.user_id = u.id
         WHERE tc.ticket_id = :ticket_id
-        ORDER BY tc.created_at ASC
+        ORDER BY tc.created_at DESC
     ";
 
     $stmt = $pdo->prepare($sql);

@@ -21,6 +21,7 @@ return [
       'ticket-edit',
       'ticket',
       'profile',
+      'upload',
       'comment-add',
     ],
 

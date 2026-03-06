@@ -15,9 +15,9 @@ function createInitialUsers(PDO $pdo): void
   ");
 
   $users = [
-    ['admin',   'admin',   'admin'],
-    ['technician', 'technician', 'technician'],
-    ['reader',  'reader',  'reader'],
+    ['AdminLeandro',   'admin',   'admin'],
+    ['TechLeandro', 'technician', 'technician'],
+    ['ReaderLeandro',  'reader',  'reader'],
   ];
 
   foreach ($users as [$username, $password, $role]) {

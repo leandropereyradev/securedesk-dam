@@ -161,48 +161,64 @@ class TicketsController
     $validStatus = ['new', 'in_process', 'resolved'];
     $validPriority = ['low', 'medium', 'high', 'critical'];
 
+    // Obtener ticket actual para comparar cambios
+    $stmt = $pdo->prepare("SELECT status, priority, assigned_to FROM tickets WHERE id = :id");
+    $stmt->execute([':id' => $ticketId]);
+    $current = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$current) {
+      throw new InvalidArgumentException("Ticket no encontrado: {$ticketId}");
+    }
+
     $fields = [];
     $params = [':id' => $ticketId];
 
-    if (isset($data['status'])) {
-      if (!in_array($data['status'], $validStatus)) {
-        throw new InvalidArgumentException("Status inválido: {$data['status']}");
+    $criticalFields = ['status', 'priority', 'assigned_to'];
+
+    // Detectar cambios críticos y preparar campos
+    foreach ($criticalFields as $field) {
+      if (array_key_exists($field, $data)) {
+        $newValue = $data[$field] === '' ? null : $data[$field];
+
+        // Validar si es status o priority
+        if ($field === 'status' && !in_array($newValue, $validStatus, true)) {
+          throw new InvalidArgumentException("Status inválido: {$newValue}");
+        }
+
+        if ($field === 'priority' && !in_array($newValue, $validPriority, true)) {
+          throw new InvalidArgumentException("Priority inválido: {$newValue}");
+        }
+
+        // Registrar cambio si es distinto
+        $oldValue = $current[$field] ?? null;
+
+        if ($oldValue != $newValue) {
+          TicketHistoryController::logChange($pdo, [
+            'ticket_id' => $ticketId,
+            'user_id'   => $_SESSION['user_id'] ?? 0,
+            'field'     => $field,
+            'old_value' => $oldValue,
+            'new_value' => $newValue,
+          ]);
+        }
+
+        $fields[] = "$field = :$field";
+        $params[":$field"] = $newValue;
       }
-      $fields[] = 'status = :status';
-      $params[':status'] = $data['status'];
     }
 
-    if (isset($data['priority'])) {
-      if (!in_array($data['priority'], $validPriority)) {
-        throw new InvalidArgumentException("Priority inválido: {$data['priority']}");
-      }
-      $fields[] = 'priority = :priority';
-      $params[':priority'] = $data['priority'];
-    }
-
+    // Otros campos (description)
     if (isset($data['description'])) {
       $fields[] = 'description = :description';
       $params[':description'] = $data['description'];
     }
 
-    if (array_key_exists('assigned_to', $data)) {
-      $assignedTo = $data['assigned_to'] === '' ? null : $data['assigned_to'];
-      $fields[] = 'assigned_to = :assigned_to';
-      $params[':assigned_to'] = $assignedTo;
-    }
-
-    // Nada que actualizar
     if (empty($fields)) {
       return false;
     }
 
     $fields[] = 'updated_at = CURRENT_TIMESTAMP';
-
-    $sql = "
-        UPDATE tickets
-        SET " . implode(', ', $fields) . "
-        WHERE id = :id
-    ";
+    $sql = "UPDATE tickets SET " . implode(', ', $fields) . " WHERE id = :id";
 
     $stmt = $pdo->prepare($sql);
     return $stmt->execute($params);

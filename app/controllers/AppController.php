@@ -110,6 +110,11 @@ class AppController
       (int)$_GET['id']
     );
 
+    $ticket['history'] = TicketHistoryController::listHistory(
+      $pdo,
+      (int)$_GET['id']
+    );
+
     $_SESSION['ticket'] = $ticket;
   }
 

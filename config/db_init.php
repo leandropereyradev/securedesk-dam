@@ -7,9 +7,12 @@ try {
 
   // Crear tablas
   initUsersDatabase($pdo);
+
   initTicketsDatabase($pdo);
-  initAttachmentsDatabase($pdo);
   initTicketCommentsDatabase($pdo);
+  initTicketHistoryDatabase($pdo);
+
+  initAttachmentsDatabase($pdo);
 
   // Insertar usuarios iniciales si no existen
   createInitialUsers($pdo);
