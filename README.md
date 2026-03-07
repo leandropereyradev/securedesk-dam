@@ -31,15 +31,26 @@
 - **MySQL not starting?** Check if another MySQL instance is running
 - **403 Forbidden error?** Verify file permissions in htdocs folder
 
+## Database Tables Created
+
+When the application is executed for the first time, the system automatically creates the following six tables in the `SecureDeskDB` database:
+
+- `users`
+- `tickets`
+- `attachments`
+- `ticket_comments`
+- `ticket_history`
+- `audit_logs`
+
 ## User Database Initialization
 
 When the application is executed for the first time, the **Users database** is created automatically if it does not exist.
 
 At that moment, the system also creates **three initial users**:
 
-- **admin** (role: admin)
-- **tecnico** (role: tecnico)
-- **lector** (role: lector)
+- **AdminLeandro** (role: admin) 
+- **TechLeandro** (role: technician) 
+- **ReaderLeandro** (role: reader) 
 
 These users are created **only once**, when the Users database is created for the first time.
 

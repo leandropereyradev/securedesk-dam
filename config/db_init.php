@@ -14,6 +14,8 @@ try {
 
   initAttachmentsDatabase($pdo);
 
+  initAuditLogsDatabase($pdo);
+
   // Insertar usuarios iniciales si no existen
   createInitialUsers($pdo);
 

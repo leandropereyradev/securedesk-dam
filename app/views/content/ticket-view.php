@@ -17,7 +17,7 @@ $comments = $ticket['comments'] ?? [];
 
   </div>
 
-  <div, class="comments-section">
+  <div class="comments-section">
     <h3>Comentarios</h3>
 
     <?php require_once ROOT . "app/views/fragments/ticket-comment-form.php"; ?>
