@@ -56,6 +56,24 @@ class AuditLogsController
     ]);
   }
 
+  public static function logLogin(int $userId): bool
+  {
+    return self::logAction([
+      'user_id'   => $userId,
+      'action'    => 'login',
+      'entity'    => 'auth'
+    ]);
+  }
+
+  public static function logLogout(int $userId): bool
+  {
+    return self::logAction([
+      'user_id'   => $userId,
+      'action'    => 'logout',
+      'entity'    => 'auth'
+    ]);
+  }
+
   private static function logAction(array $data): bool
   {
     $ip = self::getClientIp();

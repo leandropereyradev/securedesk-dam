@@ -29,10 +29,11 @@ class AuthController
         exit;
       }
 
-      // ✔ Login exitoso - guardamos datos en sesión
       $_SESSION['user_id']  = $user['id'];
       $_SESSION['username'] = $user['username'];
       $_SESSION['role']     = $user['role'];
+
+      AuditLogsController::logLogin($user['id']);
 
       header('Location: dashboard');
       exit;
@@ -41,5 +42,12 @@ class AuthController
       header('Location: login');
       exit;
     }
+  }
+
+  public static function logout()
+  {
+    AuditLogsController::logLogout($_SESSION['user_id']);
+
+    SessionController::logout();
   }
 }

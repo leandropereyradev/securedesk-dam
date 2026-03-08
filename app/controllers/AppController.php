@@ -63,7 +63,7 @@ class AppController
 
   protected function logoutGet()
   {
-    SessionController::logout();
+    AuthController::logout();
   }
 
 
