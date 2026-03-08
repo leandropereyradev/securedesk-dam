@@ -7,8 +7,8 @@ use app\controllers\SessionController;
 use app\controllers\AuthController;
 use app\controllers\TicketsController;
 use app\controllers\UsersController;
-use app\middlewares\RoleMiddleware;
 use app\controllers\AttachmentsController;
+use app\middlewares\RoleMiddleware;
 
 class AppController
 {
@@ -24,23 +24,22 @@ class AppController
     $this->viewsController = new ViewsController();
   }
 
-  // Método principal
+  // MÉTODO PRINCIPAL
   public function handleRequest()
   {
     SessionController::start();
 
-    // Construir nombre del método según vista + método HTTP
-    $methodName = $this->convertViewToMethod($this->viewName, $_SERVER['REQUEST_METHOD']);
+    $methodName = $this->convertViewToMethod(
+      $this->viewName,
+      $_SERVER['REQUEST_METHOD']
+    );
 
-    // Ejecutar el método si existe
     if (method_exists($this, $methodName)) {
       $this->$methodName();
     }
 
-    // Control de permisos centralizado
     RoleMiddleware::check($this->viewName);
 
-    // Obtener ruta de la vista
     $viewPath = $this->viewsController->getViewsController($this->viewName);
 
     if ($viewPath === '404') {
@@ -51,118 +50,135 @@ class AppController
     return $viewPath;
   }
 
-  // Convierte 'ticket-edit' + 'POST' -> 'ticketEditPost'
+  // Convierte "ticket-edit" + POST -> ticketEditPost
   private function convertViewToMethod(string $view, string $httpMethod): string
   {
     $parts = explode('-', $view);
-    $parts = array_map('ucfirst', $parts);   // ['Ticket', 'Edit']
-    $method = lcfirst(implode('', $parts));  // 'ticketEdit'
-    return $method . ucfirst(strtolower($httpMethod)); // 'ticketEditPost'
+    $parts = array_map('ucfirst', $parts);
+
+    $method = lcfirst(implode('', $parts));
+
+    return $method . ucfirst(strtolower($httpMethod));
   }
 
-  // MÉTODOS PARA RUTAS
-
-  // Login POST
+  // Métodos para login/logout
   protected function loginPost()
   {
     AuthController::login();
   }
 
-  // Logout GET
   protected function logoutGet()
   {
     SessionController::logout();
   }
 
-  // Listar tickets GET
+
+  // Métodos para tickets
   protected function ticketsGet()
   {
     SessionController::requireLogin();
 
     $tickets = TicketsController::listAll();
+
     $_SESSION['tickets'] = $tickets;
   }
 
-  // Crear ticket POST
   protected function ticketCreatePost()
   {
-    TicketsController::create();
+    $result = TicketsController::create();
+
+    if (!$result['success']) {
+      $_SESSION['ticket_error'] = $result['error'];
+    }
+
+    header('Location: tickets');
+    exit;
   }
 
-  // Ver ticket GET
   protected function ticketGet()
   {
     SessionController::requireLogin();
-    $pdo = getConnection(TICKETS_DB_PATH);
 
-    $ticket = TicketsController::getTicketById(
-      $pdo,
-      (int)$_GET['id']
-    );
+    $pdo = getConnection(TICKETS_DB_PATH);
+    $ticketId = (int)$_GET['id'];
+
+    $ticket = TicketsController::getTicketById($pdo, $ticketId);
+
+    if (!$ticket) {
+      header('Location: tickets');
+      exit;
+    }
 
     $ticket['attachments'] = AttachmentsController::getAttachmentsByTicket(
       $pdo,
-      (int)$_GET['id']
+      $ticketId
     );
 
     $ticket['comments'] = TicketCommentsController::listAll(
       $pdo,
-      (int)$_GET['id']
+      $ticketId
     );
 
     $ticket['history'] = TicketHistoryController::listHistory(
       $pdo,
-      (int)$_GET['id']
+      $ticketId
     );
 
     $_SESSION['ticket'] = $ticket;
   }
 
-  // Editar ticket GET
   protected function ticketEditGet()
   {
     SessionController::requireLogin();
+
     $_SESSION['users'] = UsersController::listAll();
   }
 
-  // Editar ticket POST
   protected function ticketEditPost()
   {
     SessionController::requireLogin();
+
     $pdo = getConnection(TICKETS_DB_PATH);
 
-    TicketsController::updateTicket(
+    $ticketId = (int)($_POST['ticket_id'] ?? 0);
+
+    $data = [
+      'status'      => $_POST['status'] ?? null,
+      'priority'    => $_POST['priority'] ?? null,
+      'assigned_to' => $_POST['assigned_to'] ?? null,
+      'description' => $_POST['description'] ?? null
+    ];
+
+    $result = TicketsController::updateTicket(
       $pdo,
-      (int)$_POST['ticket_id'],
-      [
-        'status'      => $_POST['status'],
-        'priority'    => $_POST['priority'],
-        'description' => $_POST['description'],
-        'assigned_to' => $_POST['assigned_to'],
-      ]
+      $ticketId,
+      $_SESSION['user_id'],
+      $data
     );
 
-    header('Location: ' . APP_URL . 'ticket?id=' . (int)$_POST['ticket_id']);
+    if (!$result['success']) {
+      $_SESSION['ticket_error'] = $result['error'];
+    }
+
+    header("Location: ticket?id={$ticketId}");
     exit;
   }
 
-  // Subir adjunto POST
+  // Métodos para attachments
   protected function uploadPost()
   {
     SessionController::requireLogin();
 
     $pdo = getConnection(TICKETS_DB_PATH);
 
-    AttachmentsController::upload(
-      $pdo,
-      (int)$_POST['ticket_id']
-    );
+    $ticketId = (int)$_POST['ticket_id'];
 
-    header('Location: ' . APP_URL . 'ticket?id=' . (int)$_POST['ticket_id']);
+    AttachmentsController::upload($pdo, $ticketId);
+
+    header('Location: ' . APP_URL . 'ticket?id=' . $ticketId);
     exit;
   }
 
-  // Descargar adjunto
   protected function attachmentDownloadGet()
   {
     SessionController::requireLogin();
@@ -175,7 +191,7 @@ class AppController
     );
   }
 
-  // Agregar comentario POST
+
   protected function commentAddPost()
   {
     SessionController::requireLogin();
