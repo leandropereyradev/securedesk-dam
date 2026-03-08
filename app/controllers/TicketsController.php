@@ -8,9 +8,11 @@ use app\helpers\DateHelper;
 
 class TicketsController
 {
-  public static function getTicketById(PDO $pdo, int $ticketId): ?array
+  public static function getTicketById(int $ticketId): ?array
   {
-    $ticket = TicketModel::findById($pdo, $ticketId);
+
+
+    $ticket = TicketModel::findById($ticketId);
 
     if (!$ticket) {
       return null;
@@ -32,10 +34,7 @@ class TicketsController
     ];
 
     try {
-
-      $pdo = getConnection(TICKETS_DB_PATH);
-
-      $tickets = TicketModel::listAll($pdo, $filters);
+      $tickets = TicketModel::listAll($filters);
 
       foreach ($tickets as &$ticket) {
         $ticket['created_at'] = DateHelper::utcToMadrid($ticket['created_at']);
@@ -93,10 +92,7 @@ class TicketsController
     }
 
     try {
-
-      $pdo = getConnection(TICKETS_DB_PATH);
-
-      $ticketId = TicketModel::create($pdo, [
+      $ticketId = TicketModel::create([
         'title'       => $title,
         'description' => $description,
         'status'      => 'new',
@@ -122,18 +118,19 @@ class TicketsController
   }
 
   public static function updateTicket(
-    PDO $pdo,
     int $ticketId,
     int $userId,
     array $data
   ): array {
-    
+
+    $pdo = getConnection(TICKETS_DB_PATH);
+
     $validStatus = ['new', 'in_process', 'resolved'];
     $validPriority = ['low', 'medium', 'high', 'critical'];
 
     try {
 
-      $current = TicketModel::findById($pdo, $ticketId);
+      $current = TicketModel::findById($ticketId);
 
       if (!$current) {
         return [

@@ -96,7 +96,7 @@ class AppController
     $pdo = getConnection(TICKETS_DB_PATH);
     $ticketId = (int)$_GET['id'];
 
-    $ticket = TicketsController::getTicketById($pdo, $ticketId);
+    $ticket = TicketsController::getTicketById($ticketId);
 
     if (!$ticket) {
       header('Location: tickets');
@@ -132,8 +132,6 @@ class AppController
   {
     SessionController::requireLogin();
 
-    $pdo = getConnection(TICKETS_DB_PATH);
-
     $ticketId = (int)($_POST['ticket_id'] ?? 0);
 
     $data = [
@@ -144,7 +142,6 @@ class AppController
     ];
 
     $result = TicketsController::updateTicket(
-      $pdo,
       $ticketId,
       $_SESSION['user_id'],
       $data

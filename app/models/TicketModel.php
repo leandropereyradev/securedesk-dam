@@ -6,8 +6,10 @@ use PDO;
 
 class TicketModel
 {
-  public static function findById(PDO $pdo, int $ticketId): ?array
+  public static function findById(int $ticketId): ?array
   {
+    $pdo = getConnection(TICKETS_DB_PATH);
+
     $sql = "
             SELECT
                 t.*,
@@ -25,8 +27,10 @@ class TicketModel
     return $ticket ?: null;
   }
 
-  public static function listAll(PDO $pdo, array $filters = []): array
+  public static function listAll(array $filters = []): array
   {
+    $pdo = getConnection(TICKETS_DB_PATH);
+
     $conditions = [];
     $params = [];
 
@@ -59,8 +63,10 @@ class TicketModel
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
-  public static function create(PDO $pdo, array $data): int
+  public static function create(array $data): int
   {
+    $pdo = getConnection(TICKETS_DB_PATH);
+    
     $stmt = $pdo->prepare("
             INSERT INTO tickets
             (title, description, status, priority, category, created_by, assigned_to)
