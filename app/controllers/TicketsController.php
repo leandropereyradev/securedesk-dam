@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use PDO;
 use app\models\TicketModel;
 use app\helpers\DateHelper;
 
@@ -10,8 +9,6 @@ class TicketsController
 {
   public static function getTicketById(int $ticketId): ?array
   {
-
-
     $ticket = TicketModel::findById($ticketId);
 
     if (!$ticket) {
@@ -123,8 +120,6 @@ class TicketsController
     array $data
   ): array {
 
-    $pdo = getConnection(TICKETS_DB_PATH);
-
     $validStatus = ['new', 'in_process', 'resolved'];
     $validPriority = ['low', 'medium', 'high', 'critical'];
 
@@ -169,7 +164,7 @@ class TicketsController
 
         if ($oldValue != $newValue) {
 
-          TicketHistoryController::logChange($pdo, [
+          TicketHistoryController::logChange([
             'ticket_id' => $ticketId,
             'user_id'   => $userId,
             'field'     => $field,
@@ -189,7 +184,7 @@ class TicketsController
         return ['success' => true];
       }
 
-      TicketModel::update($pdo, $ticketId, $fields);
+      TicketModel::update($ticketId, $fields);
 
       return [
         'success' => true

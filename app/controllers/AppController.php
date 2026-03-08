@@ -114,7 +114,6 @@ class AppController
     );
 
     $ticket['history'] = TicketHistoryController::listHistory(
-      $pdo,
       $ticketId
     );
 

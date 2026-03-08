@@ -66,7 +66,7 @@ class TicketModel
   public static function create(array $data): int
   {
     $pdo = getConnection(TICKETS_DB_PATH);
-    
+
     $stmt = $pdo->prepare("
             INSERT INTO tickets
             (title, description, status, priority, category, created_by, assigned_to)
@@ -79,8 +79,10 @@ class TicketModel
     return (int)$pdo->lastInsertId();
   }
 
-  public static function update(PDO $pdo, int $ticketId, array $fields): bool
+  public static function update(int $ticketId, array $fields): bool
   {
+    $pdo = getConnection(TICKETS_DB_PATH);
+
     $set = [];
     $params = [':id' => $ticketId];
 
