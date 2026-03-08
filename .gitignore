@@ -1,0 +1,5 @@
+# Ignorar base de datos SQLite
+/db/securedesk.sqlite
+
+# Ignorar carpeta de almacenamiento
+/storage/

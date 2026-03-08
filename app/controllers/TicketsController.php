@@ -99,6 +99,12 @@ class TicketsController
         'assigned_to' => $assignedTo
       ]);
 
+      AuditLogsController::logTicketCreate(
+        $ticketId,
+        $_SESSION['user_id'],
+        $title
+      );
+
       return [
         'success' => true,
         'ticket_id' => $ticketId
