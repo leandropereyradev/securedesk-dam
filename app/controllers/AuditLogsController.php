@@ -23,6 +23,23 @@ class AuditLogsController
     ]);
   }
 
+  public static function logTicketEdit(
+    int $ticketId,
+    int $userId,
+    array $changes
+  ): void {
+
+    foreach ($changes as $field => $values) {
+      self::logAction([
+        'user_id'   => $userId,
+        'action'    => 'update',
+        'entity'    => 'ticket',
+        'entity_id' => $ticketId,
+        'details'   => "{$field} cambiado de '{$values['old']}' a '{$values['new']}'"
+      ]);
+    }
+  }
+
   private static function logAction(array $data): bool
   {
     $ip = self::getClientIp();

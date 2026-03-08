@@ -192,6 +192,33 @@ class TicketsController
 
       TicketModel::update($ticketId, $fields);
 
+      $changesForLog = [];
+
+      foreach ($criticalFields as $field) {
+        if (!array_key_exists($field, $data)) continue;
+
+        $newValue = $data[$field] === '' ? null : $data[$field];
+        $oldValue = $current[$field] ?? null;
+
+        if ($oldValue != $newValue) {
+          $fields[$field] = $newValue;
+
+          $changesForLog[$field] = [
+            'old' => $oldValue === null && $field === 'assigned_to'
+              ? "Sin asignar" : $oldValue,
+
+            'new' => $newValue === null && $field === 'assigned_to'
+              ? "Sin asignar" : $newValue
+          ];
+        }
+      }
+
+      AuditLogsController::logTicketEdit(
+        $ticketId,
+        $userId,
+        $changesForLog
+      );
+
       return [
         'success' => true
       ];
