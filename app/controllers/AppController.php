@@ -2,12 +2,6 @@
 
 namespace app\controllers;
 
-use app\controllers\ViewsController;
-use app\controllers\SessionController;
-use app\controllers\AuthController;
-use app\controllers\TicketsController;
-use app\controllers\UsersController;
-use app\controllers\AttachmentsController;
 use app\middlewares\RoleMiddleware;
 
 class AppController
