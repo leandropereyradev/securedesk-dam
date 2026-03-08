@@ -93,7 +93,6 @@ class AppController
   {
     SessionController::requireLogin();
 
-    $pdo = getConnection(TICKETS_DB_PATH);
     $ticketId = (int)$_GET['id'];
 
     $ticket = TicketsController::getTicketById($ticketId);
@@ -103,10 +102,7 @@ class AppController
       exit;
     }
 
-    $ticket['attachments'] = AttachmentsController::getAttachmentsByTicket(
-      $pdo,
-      $ticketId
-    );
+    $ticket['attachments'] = AttachmentsController::getAttachmentsByTicket($ticketId);
 
     $ticket['comments'] = TicketCommentsController::listAll($ticketId);
 
@@ -156,11 +152,9 @@ class AppController
   {
     SessionController::requireLogin();
 
-    $pdo = getConnection(TICKETS_DB_PATH);
-
     $ticketId = (int)$_POST['ticket_id'];
 
-    AttachmentsController::upload($pdo, $ticketId);
+    AttachmentsController::upload($ticketId);
 
     header('Location: ' . APP_URL . 'ticket?id=' . $ticketId);
     exit;
@@ -170,12 +164,7 @@ class AppController
   {
     SessionController::requireLogin();
 
-    $pdo = getConnection(TICKETS_DB_PATH);
-
-    AttachmentsController::download(
-      $pdo,
-      (int)$_GET['id']
-    );
+    AttachmentsController::download((int)$_GET['id']);
   }
 
 
