@@ -40,6 +40,22 @@ class AuditLogsController
     }
   }
 
+  public static function logCommentAdd(
+    int $ticketId,
+    int $commentId,
+    int $userId,
+    string $content = ''
+  ): bool {
+
+    return self::logAction([
+      'user_id'   => $userId,
+      'action'    => 'add',
+      'entity'    => 'comment',
+      'entity_id' => $commentId,
+      'details'   => "Ticket #{$ticketId}: {$content}"
+    ]);
+  }
+
   private static function logAction(array $data): bool
   {
     $ip = self::getClientIp();

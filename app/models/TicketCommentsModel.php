@@ -6,7 +6,7 @@ use PDO;
 
 class TicketCommentsModel
 {
-  public static function addComment(int $ticketId, int $userId, string $comment): bool
+  public static function addComment(int $ticketId, int $userId, string $comment): ?int
   {
     $pdo = getConnection(TICKETS_DB_PATH);
 
@@ -24,11 +24,15 @@ class TicketCommentsModel
 
     $stmt = $pdo->prepare($sql);
 
-    return $stmt->execute([
+    $success = $stmt->execute([
       ':ticket_id' => $ticketId,
       ':user_id'   => $userId,
       ':comment'   => $comment,
     ]);
+
+    if (!$success) return null;
+
+    return (int)$pdo->lastInsertId();
   }
 
   public static function getCommentsByTicket(int $ticketId): array
