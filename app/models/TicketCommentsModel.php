@@ -1,0 +1,55 @@
+<?php
+
+namespace app\models;
+
+use PDO;
+
+class TicketCommentsModel
+{
+  public static function addComment(int $ticketId, int $userId, string $comment): bool
+  {
+    $pdo = getConnection(TICKETS_DB_PATH);
+
+    $ticketId = (int)$ticketId;
+    $comment  = trim($comment);
+
+    if ($ticketId <= 0 || $comment === '') {
+      return false;
+    }
+
+    $sql = "
+            INSERT INTO ticket_comments (ticket_id, user_id, comment)
+            VALUES (:ticket_id, :user_id, :comment)
+        ";
+
+    $stmt = $pdo->prepare($sql);
+
+    return $stmt->execute([
+      ':ticket_id' => $ticketId,
+      ':user_id'   => $userId,
+      ':comment'   => $comment,
+    ]);
+  }
+
+  public static function getCommentsByTicket(int $ticketId): array
+  {
+    $pdo = getConnection(TICKETS_DB_PATH);
+
+    $sql = "
+            SELECT 
+                tc.id,
+                tc.comment,
+                tc.created_at,
+                u.username
+            FROM ticket_comments tc
+            INNER JOIN users u ON tc.user_id = u.id
+            WHERE tc.ticket_id = :ticket_id
+            ORDER BY tc.created_at DESC
+        ";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':ticket_id' => $ticketId]);
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+}

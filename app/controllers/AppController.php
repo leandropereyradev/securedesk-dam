@@ -108,10 +108,7 @@ class AppController
       $ticketId
     );
 
-    $ticket['comments'] = TicketCommentsController::listAll(
-      $pdo,
-      $ticketId
-    );
+    $ticket['comments'] = TicketCommentsController::listAll($ticketId);
 
     $ticket['history'] = TicketHistoryController::listHistory(
       $ticketId
@@ -186,12 +183,7 @@ class AppController
   {
     SessionController::requireLogin();
 
-    $pdo = getConnection(TICKETS_DB_PATH);
-
-    TicketCommentsController::addComment(
-      $pdo,
-      $_POST
-    );
+    TicketCommentsController::addComment($_POST);
 
     header('Location: ' . APP_URL . 'ticket?id=' . (int)$_POST['ticket_id']);
     exit;
