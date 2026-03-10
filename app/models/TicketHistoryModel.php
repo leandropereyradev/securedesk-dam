@@ -8,7 +8,7 @@ class TicketHistoryModel
 {
   public static function logChange(array $data): bool
   {
-    $pdo = getConnection(TICKETS_DB_PATH);
+    $pdo = getConnection(SECUREDESK_DB_PATH);
 
     self::validate($data);
 
@@ -33,7 +33,7 @@ class TicketHistoryModel
 
   public static function getHistory(int $ticketId): array
   {
-    $pdo = getConnection(TICKETS_DB_PATH);
+    $pdo = getConnection(SECUREDESK_DB_PATH);
 
     $sql = "
             SELECT

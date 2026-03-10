@@ -8,7 +8,7 @@ class TicketCommentsModel
 {
   public static function addComment(int $ticketId, int $userId, string $comment): ?int
   {
-    $pdo = getConnection(TICKETS_DB_PATH);
+    $pdo = getConnection(SECUREDESK_DB_PATH);
 
     $ticketId = (int)$ticketId;
     $comment  = trim($comment);
@@ -37,7 +37,7 @@ class TicketCommentsModel
 
   public static function getCommentsByTicket(int $ticketId): array
   {
-    $pdo = getConnection(TICKETS_DB_PATH);
+    $pdo = getConnection(SECUREDESK_DB_PATH);
 
     $sql = "
             SELECT 

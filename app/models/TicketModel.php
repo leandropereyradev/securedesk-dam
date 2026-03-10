@@ -8,7 +8,7 @@ class TicketModel
 {
   public static function findById(int $ticketId): ?array
   {
-    $pdo = getConnection(TICKETS_DB_PATH);
+    $pdo = getConnection(SECUREDESK_DB_PATH);
 
     $sql = "
             SELECT
@@ -29,7 +29,7 @@ class TicketModel
 
   public static function listAll(array $filters = []): array
   {
-    $pdo = getConnection(TICKETS_DB_PATH);
+    $pdo = getConnection(SECUREDESK_DB_PATH);
 
     $conditions = [];
     $params = [];
@@ -65,7 +65,7 @@ class TicketModel
 
   public static function create(array $data): int
   {
-    $pdo = getConnection(TICKETS_DB_PATH);
+    $pdo = getConnection(SECUREDESK_DB_PATH);
 
     $stmt = $pdo->prepare("
             INSERT INTO tickets
@@ -81,7 +81,7 @@ class TicketModel
 
   public static function update(int $ticketId, array $fields): bool
   {
-    $pdo = getConnection(TICKETS_DB_PATH);
+    $pdo = getConnection(SECUREDESK_DB_PATH);
 
     $set = [];
     $params = [':id' => $ticketId];

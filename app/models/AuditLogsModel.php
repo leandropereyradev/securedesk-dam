@@ -8,7 +8,7 @@ class AuditLogsModel
 {
   public static function logAction(array $data, string $ip): bool
   {
-    $pdo = getConnection(TICKETS_DB_PATH);
+    $pdo = getConnection(SECUREDESK_DB_PATH);
 
     $stmt = $pdo->prepare("
             INSERT INTO audit_logs
@@ -29,7 +29,7 @@ class AuditLogsModel
 
   public static function listAll(array $filters = []): array
   {
-    $pdo = getConnection(TICKETS_DB_PATH);
+    $pdo = getConnection(SECUREDESK_DB_PATH);
 
     $conditions = [];
     $params = [];
@@ -69,7 +69,7 @@ class AuditLogsModel
 
   private static function getUsersFromAudit(): array
   {
-    $pdo = getConnection(TICKETS_DB_PATH);
+    $pdo = getConnection(SECUREDESK_DB_PATH);
 
     $stmt = $pdo->query("
             SELECT DISTINCT

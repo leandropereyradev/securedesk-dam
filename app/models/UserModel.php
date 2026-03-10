@@ -6,7 +6,7 @@ class UserModel
 {
   public static function getAll(): array
   {
-    $pdo = getConnection(USERS_DB_PATH);
+    $pdo = getConnection(SECUREDESK_DB_PATH);
 
     $sql = "SELECT * FROM users";
     $stmt = $pdo->query($sql);
@@ -18,7 +18,7 @@ class UserModel
 
   public static function getByUsername(string $username): array
   {
-    $pdo = getConnection(USERS_DB_PATH);
+    $pdo = getConnection(SECUREDESK_DB_PATH);
 
     $sql = "SELECT * FROM users WHERE username = :username";
     $stmt = $pdo->prepare($sql);

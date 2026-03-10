@@ -12,7 +12,7 @@ class AttachmentsModel
 
   public static function getByTicket(int $ticketId): array
   {
-    $pdo = getConnection(TICKETS_DB_PATH);
+    $pdo = getConnection(SECUREDESK_DB_PATH);
 
     $stmt = $pdo->prepare("
             SELECT a.id, a.filename, a.size, a.uploaded_at, u.username AS uploaded_by
@@ -32,7 +32,7 @@ class AttachmentsModel
 
   public static function upload(int $ticketId, array $file, int $userId): bool
   {
-    $pdo = getConnection(TICKETS_DB_PATH);
+    $pdo = getConnection(SECUREDESK_DB_PATH);
 
     if ($file['error'] !== UPLOAD_ERR_OK) {
       return false;
@@ -71,7 +71,7 @@ class AttachmentsModel
 
   public static function download(int $attachmentId): ?array
   {
-    $pdo = getConnection(TICKETS_DB_PATH);
+    $pdo = getConnection(SECUREDESK_DB_PATH);
 
     $stmt = $pdo->prepare("SELECT * FROM attachments WHERE id = :id");
     $stmt->execute([':id' => $attachmentId]);
