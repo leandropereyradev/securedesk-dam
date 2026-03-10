@@ -1,0 +1,62 @@
+<?php
+
+namespace app\helpers;
+
+class AuditViewHelper
+{
+  public static function getFilters(array $usersOptions): array
+  {
+    return [
+      [
+        'name' => 'user_id',
+        'label' => 'Usuario',
+        'all_label' => 'Todos',
+        'options' => $usersOptions
+      ],
+      [
+        'name' => 'action',
+        'label' => 'Acción',
+        'all_label' => 'Todas',
+        'options' => [
+          'login' => 'Login',
+          'logout' => 'Logout',
+          'ticket_create' => 'Tickets Creados',
+          'ticket_update' => 'Tickets Editados',
+          'add_comment' => 'Comentarios añadidos'
+        ]
+      ]
+    ];
+  }
+
+  public static function getColumns(): array
+  {
+    return [
+      [
+        'label' => 'Fecha',
+        'field' => 'created_at'
+      ],
+      [
+        'label' => 'Usuario',
+        'render' => function ($audit) {
+          return htmlspecialchars($audit['username'] ?? 'Sistema');
+        }
+      ],
+      [
+        'label' => 'Acción',
+        'field' => 'action'
+      ],
+      [
+        'label' => 'Entidad',
+        'field' => 'entity'
+      ],
+      [
+        'label' => 'Detalle',
+        'render' => function ($audit) {
+          return !empty($audit['details'])
+            ? htmlspecialchars($audit['details'])
+            : 'Sin detalle';
+        }
+      ]
+    ];
+  }
+}

@@ -167,7 +167,6 @@ class AppController
     AttachmentsController::download((int)$_GET['id']);
   }
 
-
   protected function commentAddPost()
   {
     SessionController::requireLogin();
@@ -175,6 +174,37 @@ class AppController
     TicketCommentsController::addComment($_POST);
 
     header('Location: ' . APP_URL . 'ticket?id=' . (int)$_POST['ticket_id']);
+    exit;
+  }
+
+  // Vista Auditoría
+  protected function auditGet()
+  {
+    SessionController::requireLogin();
+
+    $data = AuditLogsController::listAll();
+
+    $_SESSION['audits'] = $data['logs'];
+    $_SESSION['usersOptions'] = $data['users'];
+  }
+
+  protected function auditPost()
+  {
+    SessionController::requireLogin();
+
+    $filters = [
+      'user_id' => $_POST['user_id'] ?? null,
+      'action'  => $_POST['action'] ?? null
+    ];
+
+    $_SESSION['audit_filters'] = $filters;
+
+    $data = AuditLogsController::listAll($filters);
+
+    $_SESSION['audits'] = $data['logs'] ?? [];
+    $_SESSION['usersOptions'] = $data['users'] ?? [];
+
+    header('Location: ' . APP_URL . 'audit');
     exit;
   }
 }

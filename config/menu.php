@@ -30,6 +30,11 @@ return [
     'permission' => 'users',
   ],
   [
+    'label' => 'Auditoría',
+    'route' => 'audit',
+    'permission' => 'audit',
+  ],
+  [
     'label' => 'Mi Cuenta',
     'route' => 'profile',
     'permission' => 'profile',

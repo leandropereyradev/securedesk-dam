@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\helpers\DateHelper;
 use app\models\AuditLogsModel;
 
 use InvalidArgumentException;
@@ -16,7 +17,7 @@ class AuditLogsController
 
     return self::logAction([
       'user_id'   => $userId,
-      'action'    => 'create',
+      'action'    => 'ticket_create',
       'entity'    => 'ticket',
       'entity_id' => $ticketId,
       'details'   => "Título: {$title}"
@@ -32,7 +33,7 @@ class AuditLogsController
     foreach ($changes as $field => $values) {
       self::logAction([
         'user_id'   => $userId,
-        'action'    => 'update',
+        'action'    => 'ticket_update',
         'entity'    => 'ticket',
         'entity_id' => $ticketId,
         'details'   => "{$field} cambiado de '{$values['old']}' a '{$values['new']}'"
@@ -49,7 +50,7 @@ class AuditLogsController
 
     return self::logAction([
       'user_id'   => $userId,
-      'action'    => 'add',
+      'action'    => 'add_comment',
       'entity'    => 'comment',
       'entity_id' => $commentId,
       'details'   => "Ticket #{$ticketId}: {$content}"
@@ -61,7 +62,8 @@ class AuditLogsController
     return self::logAction([
       'user_id'   => $userId,
       'action'    => 'login',
-      'entity'    => 'auth'
+      'entity'    => 'auth',
+      'details'   => "Inicia sesión"
     ]);
   }
 
@@ -70,8 +72,32 @@ class AuditLogsController
     return self::logAction([
       'user_id'   => $userId,
       'action'    => 'logout',
-      'entity'    => 'auth'
+      'entity'    => 'auth',
+      'details'   => "Cierra sesión"
     ]);
+  }
+
+  public static function listAll(): array
+  {
+    SessionController::requireLogin();
+
+    $filters = $_SESSION['audit_filters'] ?? [
+      'user_id' => null,
+      'action' => null
+    ];
+
+    try {
+      $data = AuditLogsModel::listAll($filters);
+
+      foreach ($data['logs'] as &$log) {
+        $log['created_at'] = DateHelper::utcToMadrid($log['created_at']);
+      }
+
+      return $data;
+    } catch (\PDOException $e) {
+      error_log('Error al listar auditorías: ' . $e->getMessage());
+      return ['logs' => [], 'users' => []];
+    }
   }
 
   private static function logAction(array $data): bool

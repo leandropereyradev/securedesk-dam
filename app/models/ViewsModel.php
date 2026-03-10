@@ -17,7 +17,8 @@ class ViewsModel
       "users",
       "profile",
       "upload",
-      "comment-add"
+      "comment-add",
+      "audit",
     ];
 
     if (!in_array($view, $whitelist, true)) {
