@@ -3,11 +3,12 @@
 namespace app\controllers;
 
 use app\middlewares\RoleMiddleware;
+use app\core\RouteRegistry;
 
 class AppController
 {
-  private $viewName;
-  private $viewsController;
+  private string $viewName;
+  private ViewsController $viewsController;
 
   public function __construct()
   {
@@ -18,7 +19,6 @@ class AppController
     $this->viewsController = new ViewsController();
   }
 
-  // MÉTODO PRINCIPAL
   public function handleRequest()
   {
     SessionController::start();
@@ -28,12 +28,13 @@ class AppController
       $_SERVER['REQUEST_METHOD']
     );
 
-    if (method_exists($this, $methodName)) {
-      $this->$methodName();
-    }
+    // Ejecuta la ruta correspondiente si existe
+    RouteRegistry::dispatch($methodName);
 
+    // Verifica permisos de rol
     RoleMiddleware::check($this->viewName);
 
+    // Obtiene la vista
     $viewPath = $this->viewsController->getViewsController($this->viewName);
 
     if ($viewPath === '404') {
@@ -44,7 +45,6 @@ class AppController
     return $viewPath;
   }
 
-  // Convierte "ticket-edit" + POST -> ticketEditPost
   private function convertViewToMethod(string $view, string $httpMethod): string
   {
     $parts = explode('-', $view);
@@ -53,180 +53,5 @@ class AppController
     $method = lcfirst(implode('', $parts));
 
     return $method . ucfirst(strtolower($httpMethod));
-  }
-
-  // Métodos para login/logout
-  protected function loginPost()
-  {
-    AuthController::login();
-  }
-
-  protected function logoutGet()
-  {
-    AuthController::logout();
-  }
-
-
-  // Métodos para tickets
-
-  // Lista los tickets
-  protected function ticketsGet()
-  {
-    SessionController::requireLogin();
-
-    $tickets = TicketsController::listAll();
-
-    $_SESSION['tickets'] = $tickets;
-  }
-
-  // Lista los tickets filtrados
-  protected function ticketsPost()
-  {
-    SessionController::requireLogin();
-
-    $filters = [
-      'status' => $_POST['status'] ?? null,
-      'priority'  => $_POST['priority'] ?? null
-    ];
-
-    $_SESSION['tickets_filters'] = $filters;
-
-    $tickets = TicketsController::listAll($filters);
-
-    $_SESSION['tickets'] = $tickets ?? [];
-
-    header('Location: ' . APP_URL . 'tickets');
-    exit;
-  }
-
-  protected function ticketCreatePost()
-  {
-    $result = TicketsController::create();
-
-    if (!$result['success']) {
-      $_SESSION['ticket_error'] = $result['error'];
-    }
-
-    header('Location: tickets');
-    exit;
-  }
-
-  protected function ticketGet()
-  {
-    SessionController::requireLogin();
-
-    $ticketId = (int)$_GET['id'];
-
-    $ticket = TicketsController::getTicketById($ticketId);
-
-    if (!$ticket) {
-      header('Location: tickets');
-      exit;
-    }
-
-    $ticket['attachments'] = AttachmentsController::getAttachmentsByTicket($ticketId);
-
-    $ticket['comments'] = TicketCommentsController::listAll($ticketId);
-
-    $ticket['history'] = TicketHistoryController::listHistory(
-      $ticketId
-    );
-
-    $_SESSION['ticket'] = $ticket;
-  }
-
-  protected function ticketEditGet()
-  {
-    SessionController::requireLogin();
-
-    $_SESSION['users'] = UsersController::listAll();
-  }
-
-  protected function ticketEditPost()
-  {
-    SessionController::requireLogin();
-
-    $ticketId = (int)($_POST['ticket_id'] ?? 0);
-
-    $data = [
-      'status'      => $_POST['status'] ?? null,
-      'priority'    => $_POST['priority'] ?? null,
-      'assigned_to' => $_POST['assigned_to'] ?? null,
-      'description' => $_POST['description'] ?? null
-    ];
-
-    $result = TicketsController::updateTicket(
-      $ticketId,
-      $_SESSION['user_id'],
-      $data
-    );
-
-    if (!$result['success']) {
-      $_SESSION['ticket_error'] = $result['error'];
-    }
-
-    header("Location: ticket?id={$ticketId}");
-    exit;
-  }
-
-  // Métodos para attachments
-  protected function uploadPost()
-  {
-    SessionController::requireLogin();
-
-    $ticketId = (int)$_POST['ticket_id'];
-
-    AttachmentsController::upload($ticketId);
-
-    header('Location: ' . APP_URL . 'ticket?id=' . $ticketId);
-    exit;
-  }
-
-  protected function attachmentDownloadGet()
-  {
-    SessionController::requireLogin();
-
-    AttachmentsController::download((int)$_GET['id']);
-  }
-
-  protected function commentAddPost()
-  {
-    SessionController::requireLogin();
-
-    TicketCommentsController::addComment($_POST);
-
-    header('Location: ' . APP_URL . 'ticket?id=' . (int)$_POST['ticket_id']);
-    exit;
-  }
-
-  // Vista Auditoría
-  protected function auditGet()
-  {
-    SessionController::requireLogin();
-
-    $data = AuditLogsController::listAll();
-
-    $_SESSION['audits'] = $data['logs'];
-    $_SESSION['usersOptions'] = $data['users'];
-  }
-
-  protected function auditPost()
-  {
-    SessionController::requireLogin();
-
-    $filters = [
-      'user_id' => $_POST['user_id'] ?? null,
-      'action'  => $_POST['action'] ?? null
-    ];
-
-    $_SESSION['audit_filters'] = $filters;
-
-    $data = AuditLogsController::listAll($filters);
-
-    $_SESSION['audits'] = $data['logs'] ?? [];
-    $_SESSION['usersOptions'] = $data['users'] ?? [];
-
-    header('Location: ' . APP_URL . 'audit');
-    exit;
   }
 }
