@@ -1,12 +1,16 @@
 <?php
 
 use app\helpers\PermissionHelper;
+use app\helpers\SecurityHelper;
+
 ?>
 
 <?php if (PermissionHelper::can('comment-add')): ?>
   <form method="POST" action="comment-add">
 
     <input type="hidden" name="ticket_id" value="<?= (int)$ticket['id'] ?>">
+    
+    <?= SecurityHelper::csrfField(); ?>
 
     <textarea
       name="comment"

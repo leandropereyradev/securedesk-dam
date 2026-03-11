@@ -1,5 +1,12 @@
+<?php
+
+use app\helpers\SecurityHelper;
+?>
 <div class="ticket-create-container">
   <form method="POST" class="ticket-create-form">
+    
+    <?= SecurityHelper::csrfField(); ?>
+
     <h2>Nuevo ticket</h2>
 
     <?php if (!empty($_SESSION['ticket_error'])): ?>

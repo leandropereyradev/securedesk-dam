@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\middlewares\RoleMiddleware;
 use app\core\RouteRegistry;
+use app\helpers\SecurityHelper;
 
 class AppController
 {
@@ -22,6 +23,8 @@ class AppController
   public function handleRequest()
   {
     SessionController::start();
+
+    SecurityHelper::verifyCsrf();
 
     $methodName = $this->convertViewToMethod(
       $this->viewName,

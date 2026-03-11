@@ -1,4 +1,7 @@
 <?php
+
+use app\helpers\SecurityHelper;
+
 $ticket = $_SESSION['ticket'] ?? null;
 $users = $_SESSION['users'] ?? [];
 ?>
@@ -9,6 +12,8 @@ $users = $_SESSION['users'] ?? [];
   <form method="POST">
 
     <input type="hidden" name="ticket_id" value="<?= (int)$ticket['id'] ?>">
+    
+    <?= SecurityHelper::csrfField(); ?>
 
     <!-- ESTADO -->
     <label for="status">Estado</label>

@@ -1,6 +1,8 @@
 <?php
 
 use app\helpers\PermissionHelper;
+use app\helpers\SecurityHelper;
+
 ?>
 
 <div class="attachment-container">
@@ -9,6 +11,9 @@ use app\helpers\PermissionHelper;
   <?php if (PermissionHelper::can('upload')): ?>
 
     <form method="POST" action="upload" enctype="multipart/form-data">
+      
+      <?= SecurityHelper::csrfField(); ?>
+      
       <input type="hidden" name="ticket_id" value="<?= $ticket['id'] ?>">
       <input type="file" name="attachment">
       <button type="submit">Subir</button>

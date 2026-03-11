@@ -1,5 +1,11 @@
+<?php
+
+use app\helpers\SecurityHelper;
+?>
 <div class="list-filter-container">
   <form method="POST">
+    
+    <?= SecurityHelper::csrfField(); ?>
 
     <?php
     // Mantener los filtros seleccionados en sesión
