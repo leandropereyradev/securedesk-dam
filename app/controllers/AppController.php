@@ -68,6 +68,8 @@ class AppController
 
 
   // Métodos para tickets
+
+  // Lista los tickets
   protected function ticketsGet()
   {
     SessionController::requireLogin();
@@ -75,6 +77,26 @@ class AppController
     $tickets = TicketsController::listAll();
 
     $_SESSION['tickets'] = $tickets;
+  }
+
+  // Lista los tickets filtrados
+  protected function ticketsPost()
+  {
+    SessionController::requireLogin();
+
+    $filters = [
+      'status' => $_POST['status'] ?? null,
+      'priority'  => $_POST['priority'] ?? null
+    ];
+
+    $_SESSION['tickets_filters'] = $filters;
+
+    $tickets = TicketsController::listAll($filters);
+
+    $_SESSION['tickets'] = $tickets ?? [];
+
+    header('Location: ' . APP_URL . 'tickets');
+    exit;
   }
 
   protected function ticketCreatePost()

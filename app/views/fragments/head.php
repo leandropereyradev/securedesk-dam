@@ -6,7 +6,6 @@
 <link rel="stylesheet" href="<?php echo APP_URL; ?>public/assets/styles/nav.css">
 <link rel="stylesheet" href="<?php echo APP_URL; ?>public/assets/styles/login.css">
 <link rel="stylesheet" href="<?php echo APP_URL; ?>public/assets/styles/list-container.css">
-<link rel="stylesheet" href="<?php echo APP_URL; ?>public/assets/styles/tickets-list.css">
 <link rel="stylesheet" href="<?php echo APP_URL; ?>public/assets/styles/ticket-create.css">
 <link rel="stylesheet" href="<?php echo APP_URL; ?>public/assets/styles/ticket-edit.css">
 <link rel="stylesheet" href="<?php echo APP_URL; ?>public/assets/styles/ticket-details.css">

@@ -1,25 +1,26 @@
 <?php
 
-use app\controllers\SessionController;
-
-SessionController::requireLogin();
+use app\helpers\TicketsListViewHelper;
 
 $tickets = $_SESSION['tickets'] ?? [];
+
+$filters = TicketsListViewHelper::getFilters();
+$columns = TicketsListViewHelper::getColumns();
+
+$sessionKey = 'tickets_filters';
+$rows = $tickets;
+
 ?>
 
-<div class="tickets-container">
+<div class="list-container">
   <h1>Tickets</h1>
 
-  <div class="ticket-filter-container">
-    <?php require_once ROOT . "app/views/fragments/ticket-filter.php"; ?>
-  </div>
+  <?php require_once ROOT . "app/views/fragments/filter-form.php"; ?>
 
   <?php if (empty($tickets)): ?>
     <p>No hay tickets disponibles.</p>
   <?php else: ?>
 
-    <div class="table-container">
-      <?php require_once ROOT . "app/views/fragments/tickets-table.php"; ?>
-    </div>
+    <?php require_once ROOT . "app/views/fragments/table.php"; ?>
   <?php endif; ?>
 </div>

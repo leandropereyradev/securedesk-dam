@@ -25,9 +25,9 @@ class TicketsController
   {
     SessionController::requireLogin();
 
-    $filters = [
-      'status' => $_GET['status'] ?? null,
-      'priority' => $_GET['priority'] ?? null
+    $filters = $_SESSION['tickets_filters'] ?? [
+      'status' => null,
+      'priority' => null
     ];
 
     try {
