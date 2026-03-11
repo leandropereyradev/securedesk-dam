@@ -51,10 +51,10 @@ $users = $_SESSION['users'] ?? [];
       name="description"
       id="description"
       rows="5"
-      required><?= htmlspecialchars($ticket['description']) ?></textarea>
+      required><?= SecurityHelper::escapeXSS($ticket['description']) ?></textarea>
 
     <!-- ASIGNADO A -->
-    <label for="assigned_to">Asignado a: <?= htmlspecialchars($ticket['assigned_to'] ?
+    <label for="assigned_to">Asignado a: <?= SecurityHelper::escapeXSS($ticket['assigned_to'] ?
                                             $users[array_search(
                                               $ticket['assigned_to'],
                                               array_column($users, 'id')
@@ -70,7 +70,7 @@ $users = $_SESSION['users'] ?? [];
         <option
           value="<?= (int)$user['id'] ?>"
           <?= (int)$ticket['assigned_to'] === (int)$user['id'] ? 'selected' : '' ?>>
-          <?= htmlspecialchars($user['username']) ?>
+          <?= SecurityHelper::escapeXSS($user['username']) ?>
         </option>
       <?php endforeach; ?>
     </select>

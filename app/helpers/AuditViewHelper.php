@@ -38,7 +38,7 @@ class AuditViewHelper
       [
         'label' => 'Usuario',
         'render' => function ($audit) {
-          return htmlspecialchars($audit['username'] ?? 'Sistema');
+          return SecurityHelper::escapeXSS($audit['username'] ?? 'Sistema');
         }
       ],
       [
@@ -53,7 +53,7 @@ class AuditViewHelper
         'label' => 'Detalle',
         'render' => function ($audit) {
           return !empty($audit['details'])
-            ? htmlspecialchars($audit['details'])
+            ? SecurityHelper::escapeXSS($audit['details'])
             : 'Sin detalle';
         }
       ]

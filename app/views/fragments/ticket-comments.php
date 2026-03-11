@@ -1,4 +1,8 @@
-<?php if (empty($comments)): ?>
+<?php
+
+use app\helpers\SecurityHelper;
+
+if (empty($comments)): ?>
 
   <p class="no-comments">No hay comentarios todavía.</p>
 
@@ -12,16 +16,16 @@
 
         <div class="comment-meta">
           <span class="comment-author">
-            <?= htmlspecialchars($comment['username']) ?>
+            <?= SecurityHelper::escapeXSS($comment['username']) ?>
           </span>
 
           <span class="comment-date">
-            <?= htmlspecialchars($comment['created_at']) ?>
+            <?= SecurityHelper::escapeXSS($comment['created_at']) ?>
           </span>
         </div>
 
         <div class="comment-body">
-          <?= nl2br(htmlspecialchars($comment['comment'])) ?>
+          <?= nl2br(SecurityHelper::escapeXSS($comment['comment'])) ?>
         </div>
 
       </div>

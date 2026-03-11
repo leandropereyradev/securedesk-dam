@@ -1,5 +1,7 @@
 <?php
 
+use app\helpers\SecurityHelper;
+
 $history = $_SESSION['ticket']['history'] ?? [];
 
 $fieldLabels = [
@@ -19,15 +21,15 @@ $fieldLabels = [
       <?php foreach ($history as $h): ?>
 
         <li>
-          <strong><?= htmlspecialchars($h['changed_by_username']) ?></strong>
+          <strong><?= SecurityHelper::escapeXSS($h['changed_by_username']) ?></strong>
           cambió
-          <em><?= htmlspecialchars($fieldLabels[$h['field']] ?? $h['field']) ?></em>
+          <em><?= SecurityHelper::escapeXSS($fieldLabels[$h['field']] ?? $h['field']) ?></em>
           de
-          "<strong><?= htmlspecialchars($h['old_value']) ?></strong>"
+          "<strong><?= SecurityHelper::escapeXSS($h['old_value']) ?></strong>"
           a
-          "<strong><?= htmlspecialchars($h['new_value']) ?></strong>"
+          "<strong><?= SecurityHelper::escapeXSS($h['new_value']) ?></strong>"
           <span class="history-date">
-            (<?= htmlspecialchars($h['changed_at']) ?>)
+            (<?= SecurityHelper::escapeXSS($h['changed_at']) ?>)
           </span>
         </li>
 

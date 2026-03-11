@@ -26,9 +26,9 @@ use app\helpers\SecurityHelper;
     <ul>
       <?php foreach ($ticket['attachments'] as $att): ?>
         <li>
-          <?= htmlspecialchars($att['filename']) ?>
+          <?= SecurityHelper::escapeXSS($att['filename']) ?>
           (<?= round($att['size'] / 1024, 1) ?> KB)
-          subido por <?= htmlspecialchars($att['uploaded_by']) ?>
+          subido por <?= SecurityHelper::escapeXSS($att['uploaded_by']) ?>
           el <?= $att['uploaded_at'] ?>
           - <a href="attachment-download?id=<?= $att['id'] ?>">Descargar</a>
         </li>

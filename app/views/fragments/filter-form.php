@@ -4,7 +4,7 @@ use app\helpers\SecurityHelper;
 ?>
 <div class="list-filter-container">
   <form method="POST">
-    
+
     <?= SecurityHelper::csrfField(); ?>
 
     <?php
@@ -16,15 +16,15 @@ use app\helpers\SecurityHelper;
       <?php $selected = $selectedFilters[$filter['name']] ?? ''; ?>
 
       <label>
-        <?= htmlspecialchars($filter['label']) ?>:
+        <?= SecurityHelper::escapeXSS($filter['label']) ?>:
 
-        <select name="<?= htmlspecialchars($filter['name']) ?>">
+        <select name="<?= SecurityHelper::escapeXSS($filter['name']) ?>">
           <option value=""><?= $filter['all_label'] ?? 'Todos' ?></option>
 
           <?php foreach ($filter['options'] as $value => $text): ?>
-            <option value="<?= htmlspecialchars($value) ?>"
+            <option value="<?= SecurityHelper::escapeXSS($value) ?>"
               <?= (string)$selected === (string)$value ? 'selected' : '' ?>>
-              <?= htmlspecialchars($text) ?>
+              <?= SecurityHelper::escapeXSS($text) ?>
             </option>
           <?php endforeach; ?>
         </select>

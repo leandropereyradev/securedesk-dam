@@ -1,4 +1,7 @@
 <?php
+
+use app\helpers\SecurityHelper;
+
 $details = [
   'title' => 'Título:',
   'description' => 'Descripción:',
@@ -16,12 +19,12 @@ $details = [
   <?php foreach ($details as $field => $label): ?>
 
     <?php if ($field === 'assigned_to_username' && empty($ticket[$field])): ?>
-      <p><strong><?= htmlspecialchars($label) ?></strong>
+      <p><strong><?= SecurityHelper::escapeXSS($label) ?></strong>
         Sin Asignar
       </p>
     <?php else: ?>
-      <p><strong><?= htmlspecialchars($label) ?></strong>
-        <?= nl2br(htmlspecialchars($ticket[$field])) ?>
+      <p><strong><?= SecurityHelper::escapeXSS($label) ?></strong>
+        <?= nl2br(SecurityHelper::escapeXSS($ticket[$field])) ?>
       </p>
     <?php endif; ?>
 

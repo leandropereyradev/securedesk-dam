@@ -25,7 +25,7 @@ unset($_SESSION['login_error']);
 
     <?php if ($error): ?>
       <div class="error-message">
-        <div><?= htmlspecialchars($error) ?></div>
+        <div><?= SecurityHelper::escapeXSS($error) ?></div>
       </div>
     <?php endif; ?>
 

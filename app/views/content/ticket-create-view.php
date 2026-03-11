@@ -4,14 +4,14 @@ use app\helpers\SecurityHelper;
 ?>
 <div class="ticket-create-container">
   <form method="POST" class="ticket-create-form">
-    
+
     <?= SecurityHelper::csrfField(); ?>
 
     <h2>Nuevo ticket</h2>
 
     <?php if (!empty($_SESSION['ticket_error'])): ?>
       <div class="error-message">
-        <?= htmlspecialchars($_SESSION['ticket_error']) ?>
+        <?= SecurityHelper::escapeXSS($_SESSION['ticket_error']) ?>
       </div>
       <?php unset($_SESSION['ticket_error']); ?>
     <?php endif; ?>

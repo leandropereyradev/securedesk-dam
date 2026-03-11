@@ -2,6 +2,7 @@
 
 use app\controllers\SessionController;
 use app\helpers\PermissionHelper;
+use app\helpers\SecurityHelper;
 
 if (!SessionController::isLoggedIn()) {
   return;
@@ -28,7 +29,7 @@ $current = $_GET['views'] ?? '';
 
       <li class="<?= $isActive ? 'active' : '' ?>">
         <a class="button" href="<?= APP_URL . $item['route'] ?>">
-          <?= htmlspecialchars($item['label']) ?>
+          <?= SecurityHelper::escapeXSS($item['label']) ?>
         </a>
 
         <?php if (!empty($item['children'])): ?>
@@ -45,7 +46,7 @@ $current = $_GET['views'] ?? '';
 
               <li class="<?= $childActive ? 'active' : '' ?>">
                 <a class="button submenu-button" href="<?= APP_URL . $child['route'] ?>">
-                  <?= htmlspecialchars($child['label']) ?>
+                  <?= SecurityHelper::escapeXSS($child['label']) ?>
                 </a>
               </li>
 

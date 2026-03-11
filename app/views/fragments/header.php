@@ -1,6 +1,7 @@
 <?php
 
 use app\controllers\SessionController;
+use app\helpers\SecurityHelper;
 
 $loggedIn = SessionController::isLoggedIn();
 ?>
@@ -18,7 +19,7 @@ $loggedIn = SessionController::isLoggedIn();
     <?php if ($loggedIn): ?>
       <div class="welcome-message">
         <div>
-          <p>Nombre de usuario: <strong><?php echo htmlspecialchars($_SESSION['username']); ?></strong></p>
+          <p>Nombre de usuario: <strong><?php echo SecurityHelper::escapeXSS($_SESSION['username']); ?></strong></p>
           <p>Rol: <strong><?php echo $_SESSION['role']; ?></strong></p>
         </div>
         <a class="button" href="logout">Logout</a>

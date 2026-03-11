@@ -37,4 +37,9 @@ class SecurityHelper
 
     unset($_SESSION['csrf_token']);
   }
+
+  public static function escapeXSS(?string $value): string
+  {
+    return htmlspecialchars($value ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+  }
 }
