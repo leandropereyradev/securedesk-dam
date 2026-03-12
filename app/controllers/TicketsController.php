@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\TicketModel;
 use app\helpers\DateHelper;
+use app\helpers\ValidationHelper;
 
 class TicketsController
 {
@@ -31,6 +32,7 @@ class TicketsController
     ];
 
     try {
+
       $tickets = TicketModel::listAll($filters);
 
       foreach ($tickets as &$ticket) {
@@ -42,7 +44,6 @@ class TicketsController
     } catch (\PDOException $e) {
 
       error_log('Error al listar tickets: ' . $e->getMessage());
-
       return [];
     }
   }
@@ -71,17 +72,30 @@ class TicketsController
     $category    = trim($_POST['category'] ?? '');
     $assignedTo  = $_POST['assigned_to'] ?? null;
 
-    if ($title === '') {
+    $validPriority = ['low', 'medium', 'high', 'critical'];
+
+    // Validar título obligatorio
+    if (!ValidationHelper::required($title)) {
       return [
         'success' => false,
         'error' => 'El título es obligatorio.'
       ];
     }
 
-    $validPriority = ['low', 'medium', 'high', 'critical'];
+    // Longitud del título
+    if (!ValidationHelper::maxLength($title, 255)) {
+      return [
+        'success' => false,
+        'error' => 'El título no puede superar los 255 caracteres.'
+      ];
+    }
 
-    if (!in_array($priority, $validPriority, true)) {
-      $priority = 'medium';
+    // Validar prioridad
+    if (!ValidationHelper::inArray($priority, $validPriority)) {
+      return [
+        'success' => false,
+        'error' => 'Prioridad inválida.'
+      ];
     }
 
     if ($assignedTo === '' || $assignedTo === null) {
@@ -89,6 +103,7 @@ class TicketsController
     }
 
     try {
+
       $ticketId = TicketModel::create([
         'title'       => $title,
         'description' => $description,
@@ -141,6 +156,7 @@ class TicketsController
       }
 
       $fields = [];
+      $changesForLog = [];
 
       $criticalFields = ['status', 'priority', 'assigned_to'];
 
@@ -152,17 +168,17 @@ class TicketsController
 
         $newValue = $data[$field] === '' ? null : $data[$field];
 
-        if ($field === 'status' && !in_array($newValue, $validStatus, true)) {
+        if ($field === 'status' && !ValidationHelper::inArray($newValue, $validStatus)) {
           return [
             'success' => false,
-            'error' => "Status inválido: {$newValue}"
+            'error' => "Status inválido"
           ];
         }
 
-        if ($field === 'priority' && !in_array($newValue, $validPriority, true)) {
+        if ($field === 'priority' && !ValidationHelper::inArray($newValue, $validPriority)) {
           return [
             'success' => false,
-            'error' => "Priority inválido: {$newValue}"
+            'error' => "Prioridad inválida"
           ];
         }
 
@@ -179,11 +195,16 @@ class TicketsController
           ]);
 
           $fields[$field] = $newValue;
+
+          $changesForLog[$field] = [
+            'old' => $oldValue ?? "Sin asignar",
+            'new' => $newValue ?? "Sin asignar"
+          ];
         }
       }
 
       if (isset($data['description'])) {
-        $fields['description'] = $data['description'];
+        $fields['description'] = trim($data['description']);
       }
 
       if (empty($fields)) {
@@ -191,27 +212,6 @@ class TicketsController
       }
 
       TicketModel::update($ticketId, $fields);
-
-      $changesForLog = [];
-
-      foreach ($criticalFields as $field) {
-        if (!array_key_exists($field, $data)) continue;
-
-        $newValue = $data[$field] === '' ? null : $data[$field];
-        $oldValue = $current[$field] ?? null;
-
-        if ($oldValue != $newValue) {
-          $fields[$field] = $newValue;
-
-          $changesForLog[$field] = [
-            'old' => $oldValue === null && $field === 'assigned_to'
-              ? "Sin asignar" : $oldValue,
-
-            'new' => $newValue === null && $field === 'assigned_to'
-              ? "Sin asignar" : $newValue
-          ];
-        }
-      }
 
       AuditLogsController::logTicketEdit(
         $ticketId,
