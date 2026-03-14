@@ -2,11 +2,13 @@
 
 namespace app\models;
 
+use app\core\Database;
+
 class UserModel
 {
   public static function getAll(): array
   {
-    $pdo = getConnection(SECUREDESK_DB_PATH);
+    $pdo = Database::getConnection();
 
     $sql = "SELECT * FROM users";
     $stmt = $pdo->query($sql);
@@ -18,7 +20,7 @@ class UserModel
 
   public static function getByUsername(string $username): array
   {
-    $pdo = getConnection(SECUREDESK_DB_PATH);
+    $pdo = Database::getConnection();
 
     $sql = "SELECT * FROM users WHERE username = :username";
     $stmt = $pdo->prepare($sql);

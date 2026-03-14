@@ -2,16 +2,13 @@
 
 namespace app\models;
 
+use app\core\Database;
+
 class LoginAttemptsModel
 {
-  private static function getConnection()
-  {
-    return getConnection(SECUREDESK_DB_PATH);
-  }
-
   public static function get(int $user_id, string $ip): ?array
   {
-    $pdo = self::getConnection();
+    $pdo = Database::getConnection();
 
     $stmt = $pdo->prepare("
       SELECT *
@@ -33,7 +30,7 @@ class LoginAttemptsModel
 
   public static function getUserBlocks(int $user_id): array
   {
-    $pdo = self::getConnection();
+    $pdo = Database::getConnection();
 
     $stmt = $pdo->prepare("
       SELECT blocked_until
@@ -51,7 +48,7 @@ class LoginAttemptsModel
 
   public static function getIpBlocks(string $ip): array
   {
-    $pdo = self::getConnection();
+    $pdo = Database::getConnection();
 
     $stmt = $pdo->prepare("
       SELECT blocked_until
@@ -69,7 +66,7 @@ class LoginAttemptsModel
 
   public static function insertAttempt(int $user_id, string $ip): void
   {
-    $pdo = self::getConnection();
+    $pdo = Database::getConnection();
 
     $stmt = $pdo->prepare("
       INSERT INTO login_attempts
@@ -89,7 +86,7 @@ class LoginAttemptsModel
     ?string $blockedUntil
   ): void {
 
-    $pdo = self::getConnection();
+    $pdo = Database::getConnection();
 
     $stmt = $pdo->prepare("
       UPDATE login_attempts
@@ -108,7 +105,7 @@ class LoginAttemptsModel
 
   public static function deleteUserAttempts(int $user_id): void
   {
-    $pdo = self::getConnection();
+    $pdo = Database::getConnection();
 
     $stmt = $pdo->prepare("
       DELETE FROM login_attempts

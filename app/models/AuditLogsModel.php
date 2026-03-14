@@ -2,13 +2,14 @@
 
 namespace app\models;
 
+use app\core\Database;
 use PDO;
 
 class AuditLogsModel
 {
   public static function logAction(array $data, string $ip): bool
   {
-    $pdo = getConnection(SECUREDESK_DB_PATH);
+    $pdo = Database::getConnection();
 
     $stmt = $pdo->prepare("
             INSERT INTO audit_logs
@@ -29,7 +30,7 @@ class AuditLogsModel
 
   public static function listAll(array $filters = []): array
   {
-    $pdo = getConnection(SECUREDESK_DB_PATH);
+    $pdo = Database::getConnection();
 
     $conditions = [];
     $params = [];
@@ -69,7 +70,7 @@ class AuditLogsModel
 
   private static function getUsersFromAudit(): array
   {
-    $pdo = getConnection(SECUREDESK_DB_PATH);
+    $pdo = Database::getConnection();
 
     $stmt = $pdo->query("
             SELECT DISTINCT

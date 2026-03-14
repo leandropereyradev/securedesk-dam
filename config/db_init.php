@@ -1,9 +1,12 @@
 <?php
+
+use app\core\Database;
+
 require_once __DIR__ . '/bootstrap.php';
 
 try {
   // Conectamos a la base unificada
-  $pdo = getConnection(SECUREDESK_DB_PATH);
+  $pdo = Database::getConnection();
 
   // Crear tablas
   initUsersDatabase($pdo);

@@ -1,7 +1,9 @@
 <?php
 
+use app\core\Database;
+
 require_once __DIR__ . '../../../config/bootstrap.php';
-$pdo = getConnection(SECUREDESK_DB_PATH);
+$pdo = Database::getConnection();
 
 // Tickets de ejemplo
 $tickets = [

@@ -2,13 +2,14 @@
 
 namespace app\models;
 
+use app\core\Database;
 use PDO;
 
 class TicketCommentsModel
 {
   public static function addComment(int $ticketId, int $userId, string $comment): ?int
   {
-    $pdo = getConnection(SECUREDESK_DB_PATH);
+    $pdo = Database::getConnection();
 
     $ticketId = (int)$ticketId;
     $comment  = trim($comment);
@@ -37,7 +38,7 @@ class TicketCommentsModel
 
   public static function getCommentsByTicket(int $ticketId): array
   {
-    $pdo = getConnection(SECUREDESK_DB_PATH);
+    $pdo = Database::getConnection();
 
     $sql = "
             SELECT 

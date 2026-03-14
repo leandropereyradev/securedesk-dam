@@ -2,13 +2,14 @@
 
 namespace app\models;
 
+use app\core\Database;
 use PDO;
 
 class TicketHistoryModel
 {
   public static function logChange(array $data): bool
   {
-    $pdo = getConnection(SECUREDESK_DB_PATH);
+    $pdo = Database::getConnection();
 
     self::validate($data);
 
@@ -33,7 +34,7 @@ class TicketHistoryModel
 
   public static function getHistory(int $ticketId): array
   {
-    $pdo = getConnection(SECUREDESK_DB_PATH);
+    $pdo = Database::getConnection();
 
     $sql = "
             SELECT

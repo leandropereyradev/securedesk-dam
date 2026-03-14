@@ -2,13 +2,14 @@
 
 namespace app\models;
 
+use app\core\Database;
 use PDO;
 
 class TicketModel
 {
   public static function findById(int $ticketId): ?array
   {
-    $pdo = getConnection(SECUREDESK_DB_PATH);
+    $pdo = Database::getConnection();
 
     $sql = "
             SELECT
@@ -29,7 +30,7 @@ class TicketModel
 
   public static function listAll(array $filters = []): array
   {
-    $pdo = getConnection(SECUREDESK_DB_PATH);
+    $pdo = Database::getConnection();
 
     $conditions = [];
     $params = [];
@@ -65,7 +66,7 @@ class TicketModel
 
   public static function create(array $data): int
   {
-    $pdo = getConnection(SECUREDESK_DB_PATH);
+    $pdo = Database::getConnection();
 
     $stmt = $pdo->prepare("
             INSERT INTO tickets
@@ -81,7 +82,7 @@ class TicketModel
 
   public static function update(int $ticketId, array $fields): bool
   {
-    $pdo = getConnection(SECUREDESK_DB_PATH);
+    $pdo = Database::getConnection();
 
     $set = [];
     $params = [':id' => $ticketId];
