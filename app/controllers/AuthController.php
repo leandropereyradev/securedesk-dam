@@ -30,12 +30,12 @@ class AuthController
       }
 
       $user = UsersController::getByUsername($username);
-      $userId = $user['id'];
 
-      if ($userId === null) {
-
-        RedirectHelper::loginError('Usuario o contraseña incorrectos..');
+      if (!$user) {
+        RedirectHelper::loginError('Usuario o contraseña incorrectos.');
       }
+
+      $userId = $user['id'];
 
       if (LoginAttemptsController::isUserBlocked($userId)) {
 
@@ -66,6 +66,8 @@ class AuthController
       }
 
       LoginAttemptsController::reset($userId);
+
+      session_regenerate_id(true);
 
       $_SESSION['user_id']  = $userId;
       $_SESSION['username'] = $user['username'];
