@@ -3,3 +3,12 @@
 
 # Ignorar carpeta de almacenamiento
 /storage/
+
+# Ignorar archivo de debug temporal
+/app/routes/DebugRoutes.php
+
+# Logs
+*.log
+
+# Config local
+.env

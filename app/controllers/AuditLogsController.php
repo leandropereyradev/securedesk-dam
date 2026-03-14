@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\helpers\DateHelper;
+use app\helpers\IpHelper;
 use app\models\AuditLogsModel;
 
 use InvalidArgumentException;
@@ -100,9 +101,30 @@ class AuditLogsController
     }
   }
 
+  public static function logAuthEvent(
+    ?int $userId,
+    string $action,
+    string $details = ''
+  ): void {
+
+    try {
+
+      self::logAction([
+        'user_id'   => $userId,
+        'action'    => $action,
+        'entity'    => 'auth',
+        'entity_id' => null,
+        'details'   => $details
+      ]);
+    } catch (\PDOException $e) {
+
+      error_log('Error registrando evento de autenticación: ' . $e->getMessage());
+    }
+  }
+
   private static function logAction(array $data): bool
   {
-    $ip = self::getClientIp();
+    $ip = IpHelper::getClientIp();
 
     $required = ['user_id', 'action', 'entity'];
 
@@ -114,27 +136,5 @@ class AuditLogsController
     }
 
     return AuditLogsModel::logAction($data, $ip);
-  }
-
-  private static function getClientIp(): string
-  {
-    $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
-
-    if ($ip === '::1') $ip = '127.0.0.1';
-
-    // Revisar X-Forwarded-For por proxy
-    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-      foreach (explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']) as $forwardedIp) {
-
-        $forwardedIp = trim($forwardedIp);
-
-        if (filter_var($forwardedIp, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-          $ip = $forwardedIp;
-          break;
-        }
-      }
-    }
-
-    return $ip;
   }
 }

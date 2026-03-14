@@ -2,45 +2,81 @@
 
 namespace app\controllers;
 
+use app\helpers\IpHelper;
+use app\helpers\RedirectHelper;
+
 class AuthController
 {
   public static function login()
   {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-      header('Location: login');
-      exit;
+
+      RedirectHelper::to('login');
     }
 
-    $username = $_POST['username'] ?? '';
+    $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
+    $ip = IpHelper::getClientIp();
 
     if ($username === '' || $password === '') {
-      $_SESSION['login_error'] = 'Debes completar todos los campos.';
-      header('Location: login');
-      exit;
+
+      RedirectHelper::loginError('Debes completar todos los campos.');
     }
 
     try {
-      $user = UsersController::getByUsername($username);
+      if (LoginAttemptsController::isIpBlocked($ip)) {
 
-      if (!$user || !password_verify($password, $user['password_hash'])) {
-        $_SESSION['login_error'] = 'Usuario o contraseña incorrectos.';
-        header('Location: login');
-        exit;
+        RedirectHelper::loginError('Demasiados intentos. Inténtalo en 5 minutos.');
       }
 
-      $_SESSION['user_id']  = $user['id'];
+      $user = UsersController::getByUsername($username);
+      $userId = $user['id'];
+
+      if ($userId === null) {
+
+        RedirectHelper::loginError('Usuario o contraseña incorrectos..');
+      }
+
+      if (LoginAttemptsController::isUserBlocked($userId)) {
+
+        RedirectHelper::loginError('Demasiados intentos. Inténtalo en 5 minutos.');
+      }
+
+      if (!password_verify($password, $user['password_hash'])) {
+        $blocked = LoginAttemptsController::recordFailedAttempt($userId, $ip);
+        $attempts = LoginAttemptsController::getAttempts($userId, $ip);
+
+        if ($blocked) {
+          AuditLogsController::logAuthEvent(
+            $userId,
+            'login_blocked',
+            "Usuario {$username} bloqueado por demasiados intentos"
+          );
+
+          RedirectHelper::loginError('Demasiados intentos. Vuélvalo a intentar en 5 minutos.');
+        }
+
+        if ($attempts === 4) {
+          RedirectHelper::loginError(
+            'Te queda un intento antes de que debas esperar 5 minutos'
+          );
+        }
+
+        RedirectHelper::loginError('Usuario o contraseña incorrectos.');
+      }
+
+      LoginAttemptsController::reset($userId);
+
+      $_SESSION['user_id']  = $userId;
       $_SESSION['username'] = $user['username'];
       $_SESSION['role']     = $user['role'];
 
-      AuditLogsController::logLogin($user['id']);
+      AuditLogsController::logLogin($userId);
 
-      header('Location: dashboard');
-      exit;
+      RedirectHelper::to('dashboard');
     } catch (\PDOException $e) {
-      $_SESSION['login_error'] = 'Error de base de datos.';
-      header('Location: login');
-      exit;
+
+      RedirectHelper::loginError('Error de base de datos.');
     }
   }
 

@@ -16,6 +16,8 @@ try {
 
   initAuditLogsDatabase($pdo);
 
+  initLoginAttemptsDatabase($pdo);
+
   // Insertar usuarios iniciales si no existen
   createInitialUsers($pdo);
 
