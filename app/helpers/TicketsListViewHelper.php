@@ -53,7 +53,7 @@ class TicketsListViewHelper
       [
         'label' => 'Asignado a',
         'render' => function ($ticket) {
-          return SecurityHelper::escapeXSS($ticket['assigned_to_username'] ?? 'Sistema');
+          return SecurityHelper::escapeXSS($ticket['assigned_to_username'] ?? 'Sin Asignar');
         }
       ],
       [

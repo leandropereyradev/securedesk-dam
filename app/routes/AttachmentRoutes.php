@@ -4,6 +4,7 @@ namespace app\routes;
 
 use app\controllers\AttachmentsController;
 use app\controllers\SessionController;
+use app\helpers\RedirectHelper;
 
 class AttachmentRoutes
 {
@@ -15,7 +16,7 @@ class AttachmentRoutes
 
     AttachmentsController::upload($ticketId);
 
-    header('Location: ' . APP_URL . 'ticket?id=' . $ticketId);
+    RedirectHelper::to('ticket?id=' . $ticketId);
     exit;
   }
 

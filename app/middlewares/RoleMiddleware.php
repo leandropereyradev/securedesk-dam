@@ -2,6 +2,8 @@
 
 namespace app\middlewares;
 
+use app\helpers\RedirectHelper;
+
 class RoleMiddleware
 {
   private static array $config;
@@ -23,7 +25,7 @@ class RoleMiddleware
 
     // Requiere login
     if (!isset($_SESSION['user_id'])) {
-      header('Location: login');
+      RedirectHelper::to('login');
       exit;
     }
 

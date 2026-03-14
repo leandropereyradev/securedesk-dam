@@ -8,6 +8,7 @@ use app\controllers\TicketCommentsController;
 use app\controllers\TicketHistoryController;
 use app\controllers\TicketsController;
 use app\controllers\UsersController;
+use app\helpers\RedirectHelper;
 
 class TicketRoutes
 {
@@ -36,7 +37,7 @@ class TicketRoutes
 
     $_SESSION['tickets'] = $tickets ?? [];
 
-    header('Location: ' . APP_URL . 'tickets');
+    RedirectHelper::to('tickets');
     exit;
   }
 
@@ -48,7 +49,7 @@ class TicketRoutes
       $_SESSION['ticket_error'] = $result['error'];
     }
 
-    header('Location: tickets');
+    RedirectHelper::to('tickets');
     exit;
   }
 
@@ -61,7 +62,7 @@ class TicketRoutes
     $ticket = TicketsController::getTicketById($ticketId);
 
     if (!$ticket) {
-      header('Location: tickets');
+      RedirectHelper::to('tickets');
       exit;
     }
 
@@ -106,7 +107,7 @@ class TicketRoutes
       $_SESSION['ticket_error'] = $result['error'];
     }
 
-    header("Location: ticket?id={$ticketId}");
+    RedirectHelper::to('ticket?id=' . $ticketId);
     exit;
   }
 }

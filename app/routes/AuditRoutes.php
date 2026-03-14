@@ -4,6 +4,7 @@ namespace app\routes;
 
 use app\controllers\AuditLogsController;
 use app\controllers\SessionController;
+use app\helpers\RedirectHelper;
 
 class AuditRoutes
 {
@@ -33,7 +34,7 @@ class AuditRoutes
     $_SESSION['audits'] = $data['logs'] ?? [];
     $_SESSION['usersOptions'] = $data['users'] ?? [];
 
-    header('Location: ' . APP_URL . 'audit');
+    RedirectHelper::to('audit');
     exit;
   }
 }

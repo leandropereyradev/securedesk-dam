@@ -4,6 +4,7 @@ namespace app\routes;
 
 use app\controllers\SessionController;
 use app\controllers\TicketCommentsController;
+use app\helpers\RedirectHelper;
 
 class CommentRoutes
 {
@@ -13,7 +14,7 @@ class CommentRoutes
 
     TicketCommentsController::addComment($_POST);
 
-    header('Location: ' . APP_URL . 'ticket?id=' . (int)$_POST['ticket_id']);
+    RedirectHelper::to('ticket?id=' . (int)$_POST['ticket_id']);
     exit;
   }
 }

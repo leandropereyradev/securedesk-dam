@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\helpers\RedirectHelper;
+
 class SessionController
 {
   public static function start()
@@ -21,7 +23,7 @@ class SessionController
   {
     self::start();
     if (!isset($_SESSION['user_id'])) {
-      header('Location: login');
+      RedirectHelper::to('login');
       exit;
     }
   }
@@ -30,7 +32,7 @@ class SessionController
   {
     self::start();
     session_destroy();
-    header('Location: login');
+    RedirectHelper::to('login');
     exit;
   }
 }
