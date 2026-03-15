@@ -10,7 +10,7 @@ use app\controllers\AppController;
 $app = new AppController();
 $viewPath = $app->handleRequest();
 
-
+$viewName = $_GET['views'] ?? 'home';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,15 +20,23 @@ $viewPath = $app->handleRequest();
 </head>
 
 <body>
-  <?php require_once ROOT . "app/views/fragments/header.php"; ?>
-  <section>
-    <div class="nav-container">
-      <?php require_once ROOT . "app/views/fragments/navBar.php"; ?>
-    </div>
-    <div class="dinamic-container">
-      <?php require_once $viewPath; ?>
-    </div>
-  </section>
+  <?php if ($viewName === 'ticket-report'): ?>
+
+    <?php require_once $viewPath; ?>
+
+  <?php else: ?>
+
+    <?php require_once ROOT . "app/views/fragments/header.php"; ?>
+    <section>
+      <div class="nav-container">
+        <?php require_once ROOT . "app/views/fragments/navBar.php"; ?>
+      </div>
+      <div class="dinamic-container">
+        <?php require_once $viewPath; ?>
+      </div>
+    </section>
+
+  <?php endif; ?>
 </body>
 
 </html>

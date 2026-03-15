@@ -6,6 +6,7 @@ use app\controllers\AttachmentsController;
 use app\controllers\SessionController;
 use app\controllers\TicketCommentsController;
 use app\controllers\TicketHistoryController;
+use app\controllers\TicketReportsController;
 use app\controllers\TicketsController;
 use app\controllers\UsersController;
 use app\helpers\RedirectHelper;
@@ -109,5 +110,15 @@ class TicketRoutes
 
     RedirectHelper::to('ticket?id=' . $ticketId);
     exit;
+  }
+
+  public static function ticketReportGet()
+  {
+    SessionController::requireLogin();
+
+    $ticketId = (int)$_GET['id'];
+    $ticket = TicketReportsController::getReportHTML($ticketId);
+
+    $_SESSION['ticket'] = $ticket;
   }
 }

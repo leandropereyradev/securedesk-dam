@@ -19,6 +19,7 @@ class ViewsModel
       "upload",
       "comment-add",
       "audit",
+      "ticket-report"
     ];
 
     if (!in_array($view, $whitelist, true)) {

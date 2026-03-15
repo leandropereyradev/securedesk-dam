@@ -15,5 +15,10 @@ use app\helpers\PermissionHelper;
       Editar
     </a>
   <?php endif; ?>
-  
+
+  <a href="ticket-report?id=<?= (int)$ticket['id'] ?>"
+    class="button"
+    target="_blank">
+    Exportar informe
+  </a>
 </div>

@@ -31,11 +31,11 @@ class AppController
       $_SERVER['REQUEST_METHOD']
     );
 
-    // Ejecuta la ruta correspondiente si existe
-    RouteRegistry::dispatch($methodName);
-
     // Verifica permisos de rol
     RoleMiddleware::check($this->viewName);
+
+    // Ejecuta la ruta correspondiente si existe
+    RouteRegistry::dispatch($methodName);    
 
     // Obtiene la vista
     $viewPath = $this->viewsController->getViewsController($this->viewName);
