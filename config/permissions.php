@@ -24,14 +24,15 @@ return [
       'profile',
       'upload',
       'comment-add',
+      'logout'
     ],
 
     'reader' => [
       'dashboard',
       'tickets',
       'ticket',
-      'ticket-report',
       'profile',
+      'logout'
     ],
   ],
 ];
