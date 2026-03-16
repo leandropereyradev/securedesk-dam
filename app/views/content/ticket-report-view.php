@@ -1,98 +1,97 @@
 <?php
 
 use app\helpers\SecurityHelper;
+use app\helpers\TicketReportHelper;
 
-$ticket = $_SESSION['ticket'] ?? null;
-$comments = $ticket['comments'] ?? null;
-$history = $ticket['history'] ?? null;
-$attachments = $ticket['attachments'] ?? null;
+$report = $_SESSION['report'] ?? null;
+
+$ticket = $report['ticket'];
+$comments = $report['comments'];
+$history = $report['history'];
+$attachments = $report['attachments'];
+
+$details = TicketReportHelper::getFields();
 
 ?>
-<style>
-  @media print {
-    body {
-      font-size: 12pt;
-      color: black;
-    }
-  }
-</style>
+
 <div class="report-container">
-  <div class="report-body">
-    <h1>Informe de Ticket #<?= SecurityHelper::escapeXSS($ticket['id']) ?></h1>
-    <br>
-    <br>
+  <div class="report-header">
+    <div>
+      <h1><?= SecurityHelper::escapeXSS(APP_NAME) ?></h1>
+      <h2>Informe de Ticket</h2>
+    </div>
+    <div>
+      <p><strong>Ticket ID: <?= SecurityHelper::escapeXSS($ticket['id']) ?></strong></p>
+      <p>Generado por: <?= SecurityHelper::escapeXSS($report['generated_by']) ?></p>
+      <p>Fecha: <?= SecurityHelper::escapeXSS($report['generated_at']) ?></p>
+    </div>
+  </div>
 
-    <p><strong>Título:</strong> <?= SecurityHelper::escapeXSS($ticket['title']) ?></p>
-    <p><strong>Estado:</strong> <?= SecurityHelper::escapeXSS($ticket['status']) ?></p>
-    <p><strong>Prioridad:</strong> <?= SecurityHelper::escapeXSS($ticket['priority']) ?></p>
-    <p><strong>Asignado:</strong> <?= SecurityHelper::escapeXSS($ticket['assigned_to']) ?></p>
-    <p><strong>Creado:</strong> <?= SecurityHelper::escapeXSS($ticket['created_at']) ?></p>
-    <p><strong>Actualizado:</strong> <?= SecurityHelper::escapeXSS($ticket['updated_at']) ?></p>
-    <p><strong>Descripción:</strong></p>
-    <p> - <?= SecurityHelper::escapeXSS($ticket['description']) ?></p>
+  <div class="report-section">
+    <div class="report-details">
+      <h3>Detalle</h3>
+      <?php foreach ($details['ticket'] as $field => $label): ?>
 
-    <br>
-    <br>
-    <h3>Comentarios</h3>
-
-    <?php if (!empty($comments)): ?>
-
-      <?php foreach ($comments as $comment): ?>
-
-        <p>-
-          <strong><?= SecurityHelper::escapeXSS($comment['username']) ?></strong>
-          (<?= SecurityHelper::escapeXSS($comment['created_at']) ?>)
+        <p><strong> <?= SecurityHelper::escapeXSS($label) ?> </strong>
+          <?= SecurityHelper::escapeXSS($ticket[$field]) ?>
         </p>
-
-        <p><?= SecurityHelper::escapeXSS($comment['comment']) ?></p>
-        <br>
-
       <?php endforeach; ?>
+    </div>
 
-    <?php else: ?>
+    <div class="report-comments">
+      <h3>Comentarios</h3>
+      <?php if (!empty($comments)): ?>
+        <?php foreach ($comments as $comment): ?>
+          <p>-
+            <strong><?= SecurityHelper::escapeXSS($comment['username']) ?></strong>
+            (<?= SecurityHelper::escapeXSS($comment['created_at']) ?>)
+          </p>
+          <p><?= SecurityHelper::escapeXSS($comment['comment']) ?></p>
+          <br>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <p>No hay comentarios.</p>
+      <?php endif; ?>
+    </div>
 
-      <p>No hay comentarios.</p>
+    <div class="report-history">
+      <h3>Historial de Cambios</h3>
+      <?php if (!empty($history)): ?>
+        <?php foreach ($history as $change): ?>
+          <?php
+          $label = $details['history'][$change['field']] ?? $change['field'];
+          ?>
 
-    <?php endif; ?>
+          <p>-
+            <?= SecurityHelper::escapeXSS($label) ?>
+            de <?= SecurityHelper::escapeXSS($change['old_value']) ?>
+            →
+            a <?= SecurityHelper::escapeXSS($change['new_value']) ?>
+            (<?= SecurityHelper::escapeXSS($change['changed_at']) ?>)
+          </p>
 
-    <br>
-    <h3>Historial de Cambios</h3>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <p>No hay histórico de cambios.</p>
+      <?php endif; ?>
+    </div>
 
-    <?php if (!empty($history)): ?>
-      <?php foreach ($history as $change): ?>
-
-        <p>-
-          <?= SecurityHelper::escapeXSS($change['field']) ?>:
-          <?= SecurityHelper::escapeXSS($change['old_value']) ?>
-          →
-          <?= SecurityHelper::escapeXSS($change['new_value']) ?>
-          (<?= SecurityHelper::escapeXSS($change['changed_at']) ?>)
-        </p>
-
-      <?php endforeach; ?>
-    <?php else: ?>
-
-      <p>No hay histórico de cambios.</p>
-
-    <?php endif; ?>
-
-    <br>
-    <br>
-    <h3>Adjuntos</h3>
-
-    <?php if (!empty($attachments)): ?>
-      <?php foreach ($attachments as $file): ?>
-
-        <p>-
-          <?= SecurityHelper::escapeXSS($file['filename']) ?>
-          (<?= SecurityHelper::escapeXSS($file['uploaded_at']) ?>)
-        </p>
-
-      <?php endforeach; ?>
-    <?php else: ?>
-
-      <p>No hay archivos adjuntos.</p>
-
-    <?php endif; ?>
+    <div class="report-attachments">
+      <h3>Adjuntos</h3>
+      <?php if (!empty($attachments)): ?>
+        <?php foreach ($attachments as $file): ?>
+          <p>-
+            <?= SecurityHelper::escapeXSS($file['filename']) ?>
+            (<?= SecurityHelper::escapeXSS($file['uploaded_at']) ?>)
+          </p>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <p>No hay archivos adjuntos.</p>
+      <?php endif; ?>
+    </div>
   </div>
 </div>
+
+<?php
+unset($_SESSION['report']);
+?>

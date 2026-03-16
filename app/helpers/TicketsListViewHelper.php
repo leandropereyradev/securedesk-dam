@@ -52,9 +52,7 @@ class TicketsListViewHelper
       ],
       [
         'label' => 'Asignado a',
-        'render' => function ($ticket) {
-          return SecurityHelper::escapeXSS($ticket['assigned_to_username'] ?? 'Sin Asignar');
-        }
+        'field' => 'assigned_to_username'
       ],
       [
         'label' => 'Acciones',

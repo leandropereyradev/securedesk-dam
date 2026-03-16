@@ -2,9 +2,11 @@
 
 namespace app\controllers;
 
+use app\helpers\DateHelper;
+
 class TicketReportsController
 {
-  public static function getReportHTML(int $ticketId): ?array
+  public static function getReportData(int $ticketId): ?array
   {
     $ticket = TicketsController::getTicketById($ticketId);
 
@@ -12,15 +14,21 @@ class TicketReportsController
       return null;
     }
 
-    $ticket['comments'] =
-      TicketCommentsController::listAll($ticketId);
+    $comments =   TicketCommentsController::listAll($ticketId);
 
-    $ticket['history'] =
-      TicketHistoryController::listHistory($ticketId);
+    $history =  TicketHistoryController::listHistory($ticketId);
 
-    $ticket['attachments'] =
-      AttachmentsController::getAttachmentsByTicket($ticketId);
+    $attachments = AttachmentsController::getAttachmentsByTicket($ticketId);
 
-    return $ticket;
+    $report = [
+      'generated_by' => $_SESSION['username'],
+      'generated_at' => DateHelper::utcToMadrid(gmdate('Y-m-d H:i')),
+      'ticket' => $ticket,
+      'comments' => $comments,
+      'history' => $history,
+      'attachments' => $attachments
+    ];
+
+    return $report;
   }
 }

@@ -117,8 +117,12 @@ class TicketRoutes
     SessionController::requireLogin();
 
     $ticketId = (int)$_GET['id'];
-    $ticket = TicketReportsController::getReportHTML($ticketId);
+    $report = TicketReportsController::getReportData($ticketId);
 
-    $_SESSION['ticket'] = $ticket;
+    if ($report === null) {
+      RedirectHelper::to('tickets');
+    }
+
+    $_SESSION['report'] = $report;
   }
 }

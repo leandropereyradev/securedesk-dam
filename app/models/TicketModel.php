@@ -25,6 +25,10 @@ class TicketModel
 
     $ticket = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    if ($ticket['assigned_to_username'] === null) {
+      $ticket['assigned_to_username'] = 'Sin Asignar';
+    }
+
     return $ticket ?: null;
   }
 
@@ -61,7 +65,16 @@ class TicketModel
 
     $stmt->execute($params);
 
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($tickets as &$ticket) {
+      if ($ticket['assigned_to_username'] === null) {
+        $ticket['assigned_to_username'] = 'Sin Asignar';
+      }
+    }
+    unset($ticket);
+
+    return $tickets;
   }
 
   public static function create(array $data): int

@@ -1,0 +1,45 @@
+@media print {
+  body {
+    background: white;
+    font-size: 12pt;
+    color: black;
+  }
+
+  .report-container {
+    border: none;
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+  }
+
+  .report-header {
+    border-bottom: 2px solid black;
+    margin-bottom: 20px;
+  }
+
+  .report-header h1 {
+    font-size: 24pt;
+  }
+
+  .report-header h2 {
+    font-size: 16pt;
+  }
+
+  .report-section {
+    gap: 20px;
+  }
+
+  h3 {
+    font-size: 14pt;
+  }
+
+  p {
+    margin: 4px 0;
+  }
+
+  .report-comments,
+  .report-history,
+  .report-attachments {
+    page-break-inside: avoid;
+  }
+}
