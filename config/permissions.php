@@ -21,6 +21,8 @@ return [
       'ticket-edit',
       'ticket',
       'ticket-report',
+      'tickets-export',
+      'tickets-export-csv',
       'profile',
       'upload',
       'comment-add',

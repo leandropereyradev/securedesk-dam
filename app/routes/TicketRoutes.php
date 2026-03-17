@@ -125,4 +125,11 @@ class TicketRoutes
 
     $_SESSION['report'] = $report;
   }
+
+  public static function ticketsExportCsvGet()
+  {
+    SessionController::requireLogin();
+    
+    TicketReportsController::exportCsv();
+  }
 }

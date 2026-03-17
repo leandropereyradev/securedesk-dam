@@ -1,5 +1,6 @@
 <?php
 
+use app\helpers\PermissionHelper;
 use app\helpers\TicketsListViewHelper;
 
 $tickets = $_SESSION['tickets'] ?? [];
@@ -13,7 +14,17 @@ $rows = $tickets;
 ?>
 
 <div class="list-container">
-  <h1>Tickets</h1>
+  <div class="title">
+    <h1>Tickets</h1>
+    <div class="export-button">
+      <?php if (PermissionHelper::can('tickets-export')): ?>
+        <a href="tickets-export-csv"
+          class="button">
+          Exportar CSV
+        </a>
+      <?php endif; ?>
+    </div>
+  </div>
 
   <?php require_once ROOT . "app/views/fragments/filter-form.php"; ?>
 

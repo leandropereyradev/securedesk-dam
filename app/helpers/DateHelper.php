@@ -16,6 +16,6 @@ class DateHelper
     $date = new DateTime($utcTime, new DateTimeZone('UTC'));
     $date->setTimezone(new DateTimeZone('Europe/Madrid'));
 
-    return $date->format('d/m/Y H:i:s');
+    return $date->format('d-m-Y H:i:s');
   }
 }

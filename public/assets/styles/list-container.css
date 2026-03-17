@@ -12,3 +12,13 @@
   font-size: 50px;
   color: #f5f5f0;
 }
+
+.list-container .title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.list-container .title a {
+  height: 45px;
+  width: 200px;
+}
