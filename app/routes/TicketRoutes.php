@@ -129,7 +129,22 @@ class TicketRoutes
   public static function ticketsExportCsvGet()
   {
     SessionController::requireLogin();
-    
+
     TicketReportsController::exportCsv();
+  }
+
+  public static function ticketExportPdfGet()
+  {
+    SessionController::requireLogin();
+
+    $ticketId = (int)$_GET['id'];
+
+    $report = TicketReportsController::getReportData($ticketId);
+
+    if ($report === null) {
+      RedirectHelper::to('tickets');
+    }
+
+    TicketReportsController::exportPdf($report);
   }
 }

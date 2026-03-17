@@ -6,6 +6,16 @@
 
 - XAMPP installed and running
 - PHP 7.4 or higher
+- DOMPdf (for PDF generation) - See installation instructions below
+
+### Installing DOMPdf
+
+DOMPdf is required for PDF report generation.
+
+In the project root, run:
+```
+composer install
+```
 
 ### Steps to Run
 
@@ -41,6 +51,7 @@ When the application is executed for the first time, the system automatically cr
 - `ticket_comments`
 - `ticket_history`
 - `audit_logs`
+- `login_attempts`
 
 ## User Database Initialization
 

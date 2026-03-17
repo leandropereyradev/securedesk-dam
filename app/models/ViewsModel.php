@@ -20,7 +20,8 @@ class ViewsModel
       "comment-add",
       "audit",
       "ticket-report",
-      "tickets-export-csv"
+      "ticket-export-pdf",
+      "tickets-export-csv",
     ];
 
     if (!in_array($view, $whitelist, true)) {

@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\helpers\DateHelper;
+use Dompdf\Dompdf;
 
 class TicketReportsController
 {
@@ -68,6 +69,33 @@ class TicketReportsController
     }
 
     fclose($file);
+    exit;
+  }
+
+  public static function exportPdf(array $report): void
+  {
+    $dompdf = new Dompdf();
+
+    $cssPath = __DIR__ . '/../../public/assets/styles/pdf.css';
+    $css = file_get_contents($cssPath);
+
+    ob_start();
+    $isPdf = true;
+    require __DIR__ . '/../views/content/ticket-report-view.php';
+    $html = ob_get_clean();
+
+    $fullHtml = '<style>' . $css . '</style>' . $html;
+
+    $dompdf->loadHtml($fullHtml);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->setBasePath(__DIR__ . '/../../public/');
+
+    $dompdf->render();
+    $dompdf->stream(
+      'ticket-' . $report['ticket']['id'] . '.pdf',
+      ['Attachment' => true]
+    );
+
     exit;
   }
 }

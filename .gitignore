@@ -4,6 +4,9 @@
 # Ignorar carpeta de almacenamiento
 /storage/
 
+# Ignorar carpetas
+/vendor/
+
 # Ignorar archivo de debug temporal
 /app/routes/DebugRoutes.php
 
