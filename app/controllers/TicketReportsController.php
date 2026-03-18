@@ -30,6 +30,12 @@ class TicketReportsController
       'attachments' => $attachments
     ];
 
+    AuditLogsController::logExport(
+      $_SESSION['user_id'],
+      'HTML',
+      "Ticket ID $ticketId"
+    );
+
     return $report;
   }
 
@@ -69,12 +75,21 @@ class TicketReportsController
     }
 
     fclose($file);
+
+    AuditLogsController::logExport(
+      $_SESSION['user_id'],
+      'CSV',
+      'Lista de tickets'
+    );
+
     exit;
   }
 
   public static function exportPdf(array $report): void
   {
     $dompdf = new Dompdf();
+
+    $ticketId = $report['ticket']['id'];
 
     $cssPath = __DIR__ . '/../../public/assets/styles/pdf.css';
     $css = file_get_contents($cssPath);
@@ -92,8 +107,14 @@ class TicketReportsController
 
     $dompdf->render();
     $dompdf->stream(
-      'ticket-' . $report['ticket']['id'] . '.pdf',
+      "ticket-$ticketId.pdf",
       ['Attachment' => true]
+    );
+
+    AuditLogsController::logExport(
+      $_SESSION['user_id'],
+      'PDF',
+      "Ticket ID $ticketId"
     );
 
     exit;

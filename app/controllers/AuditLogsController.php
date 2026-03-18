@@ -122,6 +122,16 @@ class AuditLogsController
     }
   }
 
+  public static function logExport(int $userId, string $type, string $context): void
+  {
+    self::logAction([
+      'user_id' => $userId,
+      'action'  => 'export',
+      'entity'  => 'report',
+      'details' => "Exporta $type. Contexto: $context"
+    ]);
+  }
+
   private static function logAction(array $data): bool
   {
     $ip = IpHelper::getClientIp();
