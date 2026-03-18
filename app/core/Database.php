@@ -15,7 +15,7 @@ class Database
       return self::$connection;
     }
 
-    $dbPath = ROOT . 'db/securedesk.sqlite';
+    $dbPath = BASE_PATH . '/db/securedesk.sqlite';
 
     $dir = dirname($dbPath);
 
