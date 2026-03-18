@@ -3,6 +3,7 @@
 namespace app\routes;
 
 use app\controllers\AttachmentsController;
+use app\controllers\AuditLogsController;
 use app\controllers\SessionController;
 use app\controllers\TicketCommentsController;
 use app\controllers\TicketHistoryController;
@@ -124,11 +125,23 @@ class TicketRoutes
     }
 
     $_SESSION['report'] = $report;
+
+    AuditLogsController::logExport(
+      $_SESSION['user_id'],
+      'HTML',
+      "Ticket ID $ticketId"
+    );
   }
 
   public static function ticketsExportCsvGet()
   {
     SessionController::requireLogin();
+
+    AuditLogsController::logExport(
+      $_SESSION['user_id'],
+      'CSV',
+      'Lista de tickets'
+    );
 
     TicketReportsController::exportCsv();
   }
@@ -144,6 +157,12 @@ class TicketRoutes
     if ($report === null) {
       RedirectHelper::to('tickets');
     }
+
+    AuditLogsController::logExport(
+      $_SESSION['user_id'],
+      'PDF',
+      "Ticket ID $ticketId"
+    );
 
     TicketReportsController::exportPdf($report);
   }

@@ -30,12 +30,6 @@ class TicketReportsController
       'attachments' => $attachments
     ];
 
-    AuditLogsController::logExport(
-      $_SESSION['user_id'],
-      'HTML',
-      "Ticket ID $ticketId"
-    );
-
     return $report;
   }
 
@@ -76,12 +70,6 @@ class TicketReportsController
 
     fclose($file);
 
-    AuditLogsController::logExport(
-      $_SESSION['user_id'],
-      'CSV',
-      'Lista de tickets'
-    );
-
     exit;
   }
 
@@ -109,12 +97,6 @@ class TicketReportsController
     $dompdf->stream(
       "ticket-$ticketId.pdf",
       ['Attachment' => true]
-    );
-
-    AuditLogsController::logExport(
-      $_SESSION['user_id'],
-      'PDF',
-      "Ticket ID $ticketId"
     );
 
     exit;
