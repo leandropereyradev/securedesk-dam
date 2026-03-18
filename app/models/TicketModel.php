@@ -113,4 +113,28 @@ class TicketModel
 
     return $stmt->execute($params);
   }
+
+  public static function getDashboardStats(): array
+  {
+    $pdo = Database::getConnection();
+
+    $sql = "
+    SELECT
+      COUNT(*) as total,
+
+      SUM(CASE WHEN status = 'new' THEN 1 ELSE 0 END) as new,
+      SUM(CASE WHEN status = 'in_process' THEN 1 ELSE 0 END) as in_process,
+      SUM(CASE WHEN status = 'resolved' THEN 1 ELSE 0 END) as resolved,
+
+      SUM(CASE WHEN priority = 'low' THEN 1 ELSE 0 END) as low,
+      SUM(CASE WHEN priority = 'medium' THEN 1 ELSE 0 END) as medium,
+      SUM(CASE WHEN priority = 'high' THEN 1 ELSE 0 END) as high,
+      SUM(CASE WHEN priority = 'critical' THEN 1 ELSE 0 END) as critical
+
+    FROM tickets";
+
+    $stmt = $pdo->query($sql);
+
+    return $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+  }
 }

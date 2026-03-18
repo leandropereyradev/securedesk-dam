@@ -232,4 +232,25 @@ class TicketsController
       ];
     }
   }
+
+  public static function getDashboardStats(): array
+  {
+    SessionController::requireLogin();
+
+    try {
+      $stats = TicketModel::getDashboardStats();
+
+      return [
+        'stats' => $stats,
+        'updated_at' => DateHelper::utcToMadrid(gmdate('Y-m-d H:i:s'))
+      ];
+    } catch (\PDOException $e) {
+      error_log('Error dashboard: ' . $e->getMessage());
+
+      return [
+        'stats' => [],
+        'updated_at' => null
+      ];
+    }
+  }
 }
