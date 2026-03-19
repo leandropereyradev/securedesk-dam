@@ -114,7 +114,7 @@ class TicketModel
     return $stmt->execute($params);
   }
 
-  public static function getDashboardStats(): array
+  public static function getStats(): array
   {
     $pdo = Database::getConnection();
 
@@ -136,5 +136,29 @@ class TicketModel
     $stmt = $pdo->query($sql);
 
     return $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+  }
+
+  public static function getDistributionStats(): array
+  {
+    $pdo = Database::getConnection();
+
+    $stmt = $pdo->query("
+        SELECT category, COUNT(*) AS total
+        FROM tickets
+        GROUP BY category
+    ");
+    $byCategory = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $stmt = $pdo->query("
+        SELECT status, COUNT(*) AS total
+        FROM tickets
+        GROUP BY status
+    ");
+    $byStatus = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return [
+      'category' => $byCategory,
+      'status' => $byStatus
+    ];
   }
 }

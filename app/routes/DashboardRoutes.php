@@ -11,8 +11,8 @@ class DashboardRoutes
   {
     SessionController::requireLogin();
 
-    $data = TicketsController::getDashboardStats();
+    $kpiData = TicketsController::getDashboardStats();
 
-    $_SESSION['dashboard'] = $data;
+    $_SESSION['dashboard'] = $kpiData;
   }
 }

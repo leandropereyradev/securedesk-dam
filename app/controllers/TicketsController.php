@@ -238,18 +238,21 @@ class TicketsController
     SessionController::requireLogin();
 
     try {
-      $stats = TicketModel::getDashboardStats();
+      $stats = TicketModel::getStats();
+      $distribuion = TicketModel::getDistributionStats();
 
       return [
         'stats' => $stats,
-        'updated_at' => DateHelper::utcToMadrid(gmdate('Y-m-d H:i:s'))
+        'updated_at' => DateHelper::utcToMadrid(gmdate('Y-m-d H:i:s')),
+        'distribution' => $distribuion
       ];
     } catch (\PDOException $e) {
       error_log('Error dashboard: ' . $e->getMessage());
 
       return [
         'stats' => [],
-        'updated_at' => null
+        'updated_at' => null,
+        'distribution' => [],
       ];
     }
   }

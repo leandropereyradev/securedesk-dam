@@ -1,6 +1,71 @@
+.dashboard-container {
+  width: 100%;
+}
+
 .kpi-container {
-  margin-top: 50px;
   display: flex;
   flex-direction: column;
   gap: 30px;
+}
+
+.kpi-container .stats-container {
+  display: flex;
+  gap: 6rem;
+}
+
+.kpi-container .stats-container h2 {
+  margin-bottom: 10px;
+}
+
+.kpi-container .border {
+  background-color: #fff;
+  width: 100%;
+  height: 3px;
+  margin-top: 20px 0;
+}
+
+.kpi-container .graphics-container {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  gap: 6rem;
+}
+
+.graphics-container p {
+  margin-bottom: 5px;
+}
+
+.graphic-block {
+  width: 50%;
+  border: 5px;
+  border: 7px solid #5b5b5b;
+  border-radius: 30px;
+  padding: 10px;
+}
+
+.graphic-block h2 {
+  margin-bottom: 30px;
+}
+
+.bar-wrapper {
+  position: relative;
+  width: 100%;
+  height: 20px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  background: linear-gradient(to right, #4caf50 0%, #2196f3 50%, #f44336 100%);
+}
+
+.bar-mask {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background: #2b2b2b;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #818181;
 }
