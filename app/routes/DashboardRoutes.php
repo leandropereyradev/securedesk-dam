@@ -4,6 +4,7 @@ namespace app\routes;
 
 use app\controllers\SessionController;
 use app\controllers\TicketsController;
+use app\core\ViewContext;
 use app\helpers\RedirectHelper;
 
 class DashboardRoutes
@@ -14,31 +15,20 @@ class DashboardRoutes
 
     $kpiData = TicketsController::getDashboardStats();
 
-    $_SESSION['dashboard'] = $kpiData;
+    ViewContext::set('dashboard', $kpiData);
   }
 
   public static function criticalTicketsGet()
   {
     SessionController::requireLogin();
 
-    $_SESSION['tickets_filters'] = [
-      'status' => null,
-      'priority' => 'critical'
-    ];
-
-    RedirectHelper::to('tickets');
+    RedirectHelper::to('tickets?priority=critical');
   }
 
   public static function unassignedTicketsGet()
   {
     SessionController::requireLogin();
 
-    $_SESSION['tickets_filters'] = [
-      'status' => null,
-      'priority' => null,
-      'assigned_to' => 'null'
-    ];
-
-    RedirectHelper::to('tickets');
+    RedirectHelper::to('tickets?assigned_to=null');
   }
 }

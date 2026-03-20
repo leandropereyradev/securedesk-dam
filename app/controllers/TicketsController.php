@@ -22,15 +22,15 @@ class TicketsController
     return $ticket;
   }
 
-  public static function listAll(): array
+  public static function listAll(array $filters = []): array
   {
     SessionController::requireLogin();
 
-    $filters = $_SESSION['tickets_filters'] ?? [
+    $filters = array_merge([
       'status' => null,
       'priority' => null,
       'assigned_to' => null
-    ];
+    ], $filters);
 
     try {
 

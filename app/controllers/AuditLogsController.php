@@ -78,14 +78,14 @@ class AuditLogsController
     ]);
   }
 
-  public static function listAll(): array
+  public static function listAll(array $filters = []): array
   {
     SessionController::requireLogin();
 
-    $filters = $_SESSION['audit_filters'] ?? [
+    $filters = array_merge([
       'user_id' => null,
       'action' => null
-    ];
+    ], $filters);
 
     try {
       $data = AuditLogsModel::listAll($filters);

@@ -3,13 +3,10 @@
 use app\helpers\SecurityHelper;
 ?>
 <div class="list-filter-container">
-  <form method="POST">
-
-    <?= SecurityHelper::csrfField(); ?>
-
+  <form method="GET">
     <?php
     // Mantener los filtros seleccionados en sesión
-    $selectedFilters = $_SESSION[$sessionKey ?? 'filters'] ?? [];
+    $selectedFilters = view('filters', []);
     ?>
 
     <?php foreach ($filters as $filter): ?>
@@ -33,6 +30,6 @@ use app\helpers\SecurityHelper;
     <?php endforeach; ?>
 
     <button type="submit">Filtrar</button>
-    <button type="submit" name="reset_filters" value="1">Ver todos</button>
   </form>
+  <a href="<?= SecurityHelper::escapeXSS($ref) ?>" class="button">Ver todos los tickets</a>
 </div>

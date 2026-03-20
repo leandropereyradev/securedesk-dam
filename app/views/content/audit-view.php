@@ -2,15 +2,14 @@
 
 use app\helpers\AuditViewHelper;
 
-$usersOptions = $_SESSION['usersOptions'] ?? [];
-$audits = $_SESSION['audits'] ?? [];
+$usersOptions = view('usersOptions', []);
+$audits = view('audits', []);
 
 $filters = AuditViewHelper::getFilters($usersOptions);
 $columns = AuditViewHelper::getColumns();
 
-$sessionKey = 'audit_filters';
 $rows = $audits;
-
+$ref = "audit";
 ?>
 
 <div class="list-container">

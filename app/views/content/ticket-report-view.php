@@ -4,7 +4,7 @@ use app\helpers\SecurityHelper;
 use app\helpers\TicketReportHelper;
 
 $isPdf = $isPdf ?? false;
-$report = $report ?? ($_SESSION['report'] ?? null);
+$report = $report ?? view('report', []);
 
 $ticket = $report['ticket'];
 $comments = $report['comments'];
@@ -65,7 +65,7 @@ $details = TicketReportHelper::getFields();
           <p>-
             <?= SecurityHelper::escapeXSS($label) ?>
             de <?= SecurityHelper::escapeXSS($change['old_value']) ?>
-        
+
             a <?= SecurityHelper::escapeXSS($change['new_value']) ?>
             (<?= SecurityHelper::escapeXSS($change['changed_at']) ?>)
           </p>
@@ -91,7 +91,3 @@ $details = TicketReportHelper::getFields();
     </div>
   </div>
 </div>
-
-<?php
-unset($_SESSION['report']);
-?>

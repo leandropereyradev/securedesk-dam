@@ -23,6 +23,7 @@ class AuditViewHelper
           'login_blocked' => 'Bloqueos de usuario',
           'ticket_create' => 'Tickets Creados',
           'ticket_update' => 'Tickets Editados',
+          'export' => 'Esportaciones',
           'add_comment' => 'Comentarios añadidos'
         ]
       ]

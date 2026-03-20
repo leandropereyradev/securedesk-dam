@@ -2,8 +2,10 @@
 
 use app\helpers\KpiHelper;
 
-$distribution = $_SESSION['dashboard']['distribution'] ?? [];
-$stats = $_SESSION['dashboard']['stats'] ?? [];
+$dashboard = view('dashboard', []);
+
+$distribution = $dashboard['distribution'] ?? [];
+$stats = $dashboard['stats'] ?? [];
 
 $statsDetails = KpiHelper::getFields();
 
@@ -15,7 +17,8 @@ $statsDetails = KpiHelper::getFields();
 
       <div class="dashboard-header">
         <div>
-          <p><strong>Actualizado: <?= $_SESSION['dashboard']['updated_at'] ?></strong></p>
+          <h3>Actualizado: <?= $dashboard['updated_at'] ?></h3>
+          <div class="border"></div>
           <?php require_once ROOT . "app/views/fragments/dashboard/stats.php"; ?>
         </div>
         <div class="quick-links">

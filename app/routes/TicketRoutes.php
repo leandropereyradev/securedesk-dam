@@ -10,6 +10,7 @@ use app\controllers\TicketHistoryController;
 use app\controllers\TicketReportsController;
 use app\controllers\TicketsController;
 use app\controllers\UsersController;
+use app\core\ViewContext;
 use app\helpers\RedirectHelper;
 
 class TicketRoutes
@@ -18,40 +19,18 @@ class TicketRoutes
   {
     SessionController::requireLogin();
 
-    $tickets = TicketsController::listAll();
-    $users = UsersController::listAll();
-
-    $_SESSION['tickets'] = $tickets;
-    $_SESSION['users'] = $users;
-  }
-
-  // Lista los tickets filtrados
-  public static function ticketsPost()
-  {
-    SessionController::requireLogin();
-
-    if (isset($_POST['reset_filters'])) {
-
-      unset($_SESSION['tickets_filters']);
-
-      RedirectHelper::to('tickets');
-      exit;
-    }
-
     $filters = [
-      'status' => $_POST['status'] ?? null,
-      'priority'  => $_POST['priority'] ?? null,
-      'assigned_to'  => $_POST['assigned_to'] ?? null
+      'status' => $_GET['status'] ?? null,
+      'priority' => $_GET['priority'] ?? null,
+      'assigned_to' => $_GET['assigned_to'] ?? null
     ];
 
-    $_SESSION['tickets_filters'] = $filters;
-
     $tickets = TicketsController::listAll($filters);
+    $users = UsersController::listAll();
 
-    $_SESSION['tickets'] = $tickets ?? [];
-
-    RedirectHelper::to('tickets');
-    exit;
+    ViewContext::set('tickets', $tickets);
+    ViewContext::set('users', $users);
+    ViewContext::set('filters', $filters);
   }
 
   public static function ticketCreatePost()
@@ -80,21 +59,23 @@ class TicketRoutes
     }
 
     $ticket['attachments'] = AttachmentsController::getAttachmentsByTicket($ticketId);
-
     $ticket['comments'] = TicketCommentsController::listAll($ticketId);
+    $ticket['history'] = TicketHistoryController::listHistory($ticketId);
 
-    $ticket['history'] = TicketHistoryController::listHistory(
-      $ticketId
-    );
-
-    $_SESSION['ticket'] = $ticket;
+    ViewContext::set('ticket', $ticket);
   }
 
   public static function ticketEditGet()
   {
     SessionController::requireLogin();
 
-    $_SESSION['users'] = UsersController::listAll();
+    $ticketId = (int)$_GET['id'];
+    $ticket = TicketsController::getTicketById($ticketId);
+
+    $users = UsersController::listAll();
+
+    ViewContext::set('users', $users);
+    ViewContext::set('ticket', $ticket);
   }
 
   public static function ticketEditPost()
@@ -117,7 +98,7 @@ class TicketRoutes
     );
 
     if (!$result['success']) {
-      $_SESSION['ticket_error'] = $result['error'];
+      $_SESSION['ticket_error'] = $result['error']; // flash OK
     }
 
     RedirectHelper::to('ticket?id=' . $ticketId);
@@ -129,13 +110,15 @@ class TicketRoutes
     SessionController::requireLogin();
 
     $ticketId = (int)$_GET['id'];
+
     $report = TicketReportsController::getReportData($ticketId);
 
     if ($report === null) {
       RedirectHelper::to('tickets');
+      exit;
     }
 
-    $_SESSION['report'] = $report;
+    ViewContext::set('report', $report);
 
     AuditLogsController::logExport(
       $_SESSION['user_id'],
@@ -148,13 +131,19 @@ class TicketRoutes
   {
     SessionController::requireLogin();
 
+    $filters = [
+      'status' => $_GET['status'] ?? null,
+      'priority' => $_GET['priority'] ?? null,
+      'assigned_to' => $_GET['assigned_to'] ?? null
+    ];
+
     AuditLogsController::logExport(
       $_SESSION['user_id'],
       'CSV',
       'Lista de tickets'
     );
 
-    TicketReportsController::exportCsv();
+    TicketReportsController::exportCsv($filters);
   }
 
   public static function ticketExportPdfGet()
@@ -167,6 +156,7 @@ class TicketRoutes
 
     if ($report === null) {
       RedirectHelper::to('tickets');
+      exit;
     }
 
     AuditLogsController::logExport(

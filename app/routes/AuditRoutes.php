@@ -4,7 +4,7 @@ namespace app\routes;
 
 use app\controllers\AuditLogsController;
 use app\controllers\SessionController;
-use app\helpers\RedirectHelper;
+use app\core\ViewContext;
 
 class AuditRoutes
 {
@@ -12,37 +12,15 @@ class AuditRoutes
   {
     SessionController::requireLogin();
 
-    $data = AuditLogsController::listAll();
-
-    $_SESSION['audits'] = $data['logs'];
-    $_SESSION['usersOptions'] = $data['users'];
-  }
-
-  public static function auditPost()
-  {
-    SessionController::requireLogin();
-
-    if (isset($_POST['reset_filters'])) {
-
-      unset($_SESSION['audit_filters']);
-
-      RedirectHelper::to('audit');
-      exit;
-    }
-
     $filters = [
-      'user_id' => $_POST['user_id'] ?? null,
-      'action'  => $_POST['action'] ?? null
+      'user_id' => $_GET['user_id'] ?? null,
+      'action' => $_GET['action'] ?? null,
     ];
 
-    $_SESSION['audit_filters'] = $filters;
+    $data = AuditLogsController::listAll($filters );
 
-    $data = AuditLogsController::listAll($filters);
-
-    $_SESSION['audits'] = $data['logs'] ?? [];
-    $_SESSION['usersOptions'] = $data['users'] ?? [];
-
-    RedirectHelper::to('audit');
-    exit;
+    ViewContext::set('audits', $data['logs']);
+    ViewContext::set('usersOptions', $data['users']);
+    ViewContext::set('filters', $filters);
   }
 }

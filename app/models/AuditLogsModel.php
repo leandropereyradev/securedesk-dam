@@ -35,12 +35,12 @@ class AuditLogsModel
     $conditions = [];
     $params = [];
 
-    if (!empty($filters['user_id'])) {
+    if (isset($filters['user_id']) && $filters['user_id'] !== '') {
       $conditions[] = 'al.user_id = :user_id';
-      $params[':user_id'] = $filters['user_id'];
+      $params[':user_id'] = (int)$filters['user_id'];
     }
 
-    if (!empty($filters['action'])) {
+    if (isset($filters['action']) && $filters['action'] !== '') {
       $conditions[] = 'al.action = :action';
       $params[':action'] = $filters['action'];
     }

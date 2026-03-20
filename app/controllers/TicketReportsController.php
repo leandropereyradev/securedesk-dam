@@ -16,9 +16,7 @@ class TicketReportsController
     }
 
     $comments =   TicketCommentsController::listAll($ticketId);
-
     $history =  TicketHistoryController::listHistory($ticketId);
-
     $attachments = AttachmentsController::getAttachmentsByTicket($ticketId);
 
     $report = [
@@ -33,13 +31,8 @@ class TicketReportsController
     return $report;
   }
 
-  public static function exportCsv(): void
+  public static function exportCsv(array $filters = []): void
   {
-    $filters = $_SESSION['tickets_filters'] ?? [
-      'status' => null,
-      'priority' => null,
-      'assigned_to' => null
-    ];
 
     $tickets = TicketsController::listAll($filters);
 

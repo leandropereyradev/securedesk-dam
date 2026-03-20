@@ -2,16 +2,16 @@
 
 use app\helpers\PermissionHelper;
 use app\helpers\TicketsListViewHelper;
+use app\helpers\UrlHelper;
 
-$tickets = $_SESSION['tickets'] ?? [];
-$users = $_SESSION['users'] ?? [];
+$tickets = view('tickets', []);
+$users = view('users', []);
 
 $filters = TicketsListViewHelper::getFilters($users);
 $columns = TicketsListViewHelper::getColumns();
 
-$sessionKey = 'tickets_filters';
 $rows = $tickets;
-
+$ref = "tickets";
 ?>
 
 <div class="list-container">
@@ -19,7 +19,11 @@ $rows = $tickets;
     <h1>Tickets</h1>
     <div class="export-button">
       <?php if (PermissionHelper::can('tickets-export')): ?>
-        <a href="tickets-export-csv"
+        <a href="<?=
+                  UrlHelper::withQuery(
+                    'tickets-export-csv',
+                    view('filters', [])
+                  ) ?>"
           class="button">
           Exportar CSV
         </a>

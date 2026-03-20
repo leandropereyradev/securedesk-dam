@@ -2,8 +2,8 @@
 
 use app\helpers\SecurityHelper;
 
-$ticket = $_SESSION['ticket'] ?? null;
-$users = $_SESSION['users'] ?? [];
+$ticket = view('ticket', []);
+$users = view('users', []);
 ?>
 
 <div class="ticket-edit-container">

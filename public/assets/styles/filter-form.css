@@ -1,7 +1,7 @@
 .list-filter-container form {
   display: flex;
-  gap: 1rem; /* Espacio entre filtros */
-  margin-bottom: 2.5rem;
+  gap: 1rem;
+  margin-bottom: 1rem;
   flex-wrap: wrap;
   align-items: center;
   font-family: sans-serif;
@@ -11,7 +11,7 @@
   display: flex;
   flex-direction: column;
   font-size: 0.9rem;
-  color: #f0f0f0; /* Texto claro */
+  color: #f0f0f0;
 }
 
 .list-filter-container form select {
@@ -19,7 +19,7 @@
   padding: 6px 10px;
   border-radius: 6px;
   border: 1px solid #555;
-  background-color: #1e202b; /* Combina con las filas pares */
+  background-color: #1e202b;
   color: #fff;
   font-size: 0.9rem;
 }
@@ -47,4 +47,9 @@
 
 .list-filter-container form button:active {
   background-color: #777;
+}
+
+.list-filter-container a {
+  margin-bottom: 2rem;
+  width: 455px;
 }

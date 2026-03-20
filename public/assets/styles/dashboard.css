@@ -13,9 +13,14 @@
   justify-content: space-between;
 }
 
+.dashboard-header h3 {
+  margin-bottom: 10px;
+}
+
 .kpi-container .stats-container {
   display: flex;
   gap: 6rem;
+  margin-top: 30px;
 }
 
 .kpi-container .stats-container h2 {
@@ -73,4 +78,12 @@
   text-align: center;
   padding: 40px;
   color: #818181;
+}
+
+.danger {
+  background-color: #740000;
+}
+
+.warning {
+  background-color: #8b7700;
 }

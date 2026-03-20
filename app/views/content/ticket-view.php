@@ -1,9 +1,9 @@
 <?php
 
-$ticket = $_SESSION['ticket'] ?? null;
-$history = $_SESSION['ticket']['history'] ?? [];
-$user = $_SESSION['user'] ?? null;
+$ticket = view('ticket', []);
+$history = $ticket['history'] ?? [];
 $comments = $ticket['comments'] ?? [];
+$attachments = $ticket['attachments'] ?? [];
 ?>
 
 <h1>Detalle del Ticket</h1>
