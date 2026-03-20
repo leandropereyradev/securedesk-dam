@@ -2,8 +2,6 @@
 
 use app\helpers\SecurityHelper;
 
-$history = $_SESSION['ticket']['history'] ?? [];
-
 $fieldLabels = [
   'status' => 'Estado',
   'priority' => 'Prioridad',

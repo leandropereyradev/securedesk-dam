@@ -24,6 +24,8 @@ return [
       'ticket-export-pdf',
       'tickets-export',
       'tickets-export-csv',
+      'critical-tickets',
+      'unassigned-tickets',
       'profile',
       'upload',
       'comment-add',
@@ -33,6 +35,8 @@ return [
     'reader' => [
       'dashboard',
       'tickets',
+      'critical-tickets',
+      'unassigned-tickets',
       'ticket',
       'profile',
       'logout'

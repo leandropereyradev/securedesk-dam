@@ -1,6 +1,7 @@
 <?php
 
 $ticket = $_SESSION['ticket'] ?? null;
+$history = $_SESSION['ticket']['history'] ?? [];
 $user = $_SESSION['user'] ?? null;
 $comments = $ticket['comments'] ?? [];
 ?>

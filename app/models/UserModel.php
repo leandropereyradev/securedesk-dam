@@ -10,7 +10,11 @@ class UserModel
   {
     $pdo = Database::getConnection();
 
-    $sql = "SELECT * FROM users";
+    $sql = "SELECT
+                id,
+                username,
+                role 
+            FROM users";
     $stmt = $pdo->query($sql);
 
     $users = $stmt->fetchAll(\PDO::FETCH_ASSOC);

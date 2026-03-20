@@ -28,7 +28,8 @@ class TicketsController
 
     $filters = $_SESSION['tickets_filters'] ?? [
       'status' => null,
-      'priority' => null
+      'priority' => null,
+      'assigned_to' => null
     ];
 
     try {
@@ -239,12 +240,12 @@ class TicketsController
 
     try {
       $stats = TicketModel::getStats();
-      $distribuion = TicketModel::getDistributionStats();
+      $distribution = TicketModel::getDistributionStats();
 
       return [
         'stats' => $stats,
         'updated_at' => DateHelper::utcToMadrid(gmdate('Y-m-d H:i:s')),
-        'distribution' => $distribuion
+        'distribution' => $distribution,
       ];
     } catch (\PDOException $e) {
       error_log('Error dashboard: ' . $e->getMessage());

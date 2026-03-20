@@ -22,6 +22,8 @@ class ViewsModel
       "ticket-report",
       "ticket-export-pdf",
       "tickets-export-csv",
+      'critical-tickets',
+      'unassigned-tickets',
     ];
 
     if (!in_array($view, $whitelist, true)) {

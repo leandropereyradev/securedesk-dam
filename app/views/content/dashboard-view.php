@@ -13,9 +13,22 @@ $statsDetails = KpiHelper::getFields();
   <div class="kpi-container">
     <?php if ($stats): ?>
 
-      <p><strong>Actualizado: <?= $_SESSION['dashboard']['updated_at'] ?></strong></p>
+      <div class="dashboard-header">
+        <div>
+          <p><strong>Actualizado: <?= $_SESSION['dashboard']['updated_at'] ?></strong></p>
+          <?php require_once ROOT . "app/views/fragments/dashboard/stats.php"; ?>
+        </div>
+        <div class="quick-links">
+          <a href="critical-tickets" class="button danger">
+            Tickets críticos
+          </a>
 
-      <?php require_once ROOT . "app/views/fragments/dashboard/stats.php"; ?>
+          <a href="unassigned-tickets" class="button warning">
+            Tickets sin asignar
+          </a>
+        </div>
+
+      </div>
 
       <div class="border"></div>
 
@@ -30,6 +43,3 @@ $statsDetails = KpiHelper::getFields();
 
   </div>
 </div>
-<?php
-unset($_SESSION['dashboard']);
-?>

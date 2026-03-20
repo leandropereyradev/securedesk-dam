@@ -49,6 +49,16 @@ class TicketModel
       $params[':priority'] = $filters['priority'];
     }
 
+    if (array_key_exists('assigned_to', $filters)) {
+
+      if ($filters['assigned_to'] === 'null') {
+        $conditions[] = 't.assigned_to IS NULL';
+      } elseif ($filters['assigned_to'] !== null && $filters['assigned_to'] !== '') {
+        $conditions[] = 't.assigned_to = :assigned_to';
+        $params[':assigned_to'] = (int)$filters['assigned_to'];
+      }
+    }
+
     $where = $conditions ? 'WHERE ' . implode(' AND ', $conditions) : '';
 
     $stmt = $pdo->prepare("

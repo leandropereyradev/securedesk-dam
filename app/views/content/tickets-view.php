@@ -4,8 +4,9 @@ use app\helpers\PermissionHelper;
 use app\helpers\TicketsListViewHelper;
 
 $tickets = $_SESSION['tickets'] ?? [];
+$users = $_SESSION['users'] ?? [];
 
-$filters = TicketsListViewHelper::getFilters();
+$filters = TicketsListViewHelper::getFilters($users);
 $columns = TicketsListViewHelper::getColumns();
 
 $sessionKey = 'tickets_filters';

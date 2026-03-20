@@ -22,6 +22,14 @@ class AuditRoutes
   {
     SessionController::requireLogin();
 
+    if (isset($_POST['reset_filters'])) {
+
+      unset($_SESSION['audit_filters']);
+
+      RedirectHelper::to('audit');
+      exit;
+    }
+
     $filters = [
       'user_id' => $_POST['user_id'] ?? null,
       'action'  => $_POST['action'] ?? null

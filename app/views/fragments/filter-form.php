@@ -33,5 +33,6 @@ use app\helpers\SecurityHelper;
     <?php endforeach; ?>
 
     <button type="submit">Filtrar</button>
+    <button type="submit" name="reset_filters" value="1">Ver todos</button>
   </form>
 </div>

@@ -12,7 +12,7 @@ $users = $_SESSION['users'] ?? [];
   <form method="POST">
 
     <input type="hidden" name="ticket_id" value="<?= (int)$ticket['id'] ?>">
-    
+
     <?= SecurityHelper::csrfField(); ?>
 
     <!-- ESTADO -->

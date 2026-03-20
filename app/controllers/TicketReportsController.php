@@ -37,7 +37,8 @@ class TicketReportsController
   {
     $filters = $_SESSION['tickets_filters'] ?? [
       'status' => null,
-      'priority' => null
+      'priority' => null,
+      'assigned_to' => null
     ];
 
     $tickets = TicketsController::listAll($filters);

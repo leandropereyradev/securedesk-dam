@@ -4,8 +4,16 @@ namespace app\helpers;
 
 class TicketsListViewHelper
 {
-  public static function getFilters(): array
+  public static function getFilters(array $users = []): array
   {
+    $assignedOptions = [
+      'null' => 'Sin asignar'
+    ];
+
+    foreach ($users as $user) {
+      $assignedOptions[(int)$user['id']] = $user['username'];
+    }
+
     return [
       [
         'name' => 'status',
@@ -27,6 +35,12 @@ class TicketsListViewHelper
           'high' => 'Alta',
           'critical' => 'Crítica'
         ]
+      ],
+      [
+        'name' => 'assigned_to',
+        'label' => 'Asignado a',
+        'all_label' => 'Todas',
+        'options' => $assignedOptions
       ]
     ];
   }

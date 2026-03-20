@@ -19,8 +19,10 @@ class TicketRoutes
     SessionController::requireLogin();
 
     $tickets = TicketsController::listAll();
+    $users = UsersController::listAll();
 
     $_SESSION['tickets'] = $tickets;
+    $_SESSION['users'] = $users;
   }
 
   // Lista los tickets filtrados
@@ -28,9 +30,18 @@ class TicketRoutes
   {
     SessionController::requireLogin();
 
+    if (isset($_POST['reset_filters'])) {
+
+      unset($_SESSION['tickets_filters']);
+
+      RedirectHelper::to('tickets');
+      exit;
+    }
+
     $filters = [
       'status' => $_POST['status'] ?? null,
-      'priority'  => $_POST['priority'] ?? null
+      'priority'  => $_POST['priority'] ?? null,
+      'assigned_to'  => $_POST['assigned_to'] ?? null
     ];
 
     $_SESSION['tickets_filters'] = $filters;
