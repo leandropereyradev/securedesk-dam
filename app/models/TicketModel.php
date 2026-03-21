@@ -59,6 +59,22 @@ class TicketModel
       }
     }
 
+    if (!empty($filters['q'])) {
+
+      $search = '%' . $filters['q'] . '%';
+
+      if ($filters['search_in'] === 'title') {
+        $conditions[] = 't.title LIKE :search';
+        $params[':search'] = $search;
+      } elseif ($filters['search_in'] === 'description') {
+        $conditions[] = 't.description LIKE :search';
+        $params[':search'] = $search;
+      } else {
+        $conditions[] = '(t.title LIKE :search OR t.description LIKE :search)';
+        $params[':search'] = $search;
+      }
+    }
+
     $where = $conditions ? 'WHERE ' . implode(' AND ', $conditions) : '';
 
     $stmt = $pdo->prepare("

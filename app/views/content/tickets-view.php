@@ -12,11 +12,15 @@ $columns = TicketsListViewHelper::getColumns();
 
 $rows = $tickets;
 $ref = "tickets";
+
+$selectedFilters = view('filters', []);
+$q = $selectedFilters['q'] ?? '';
+$searchIn = $selectedFilters['search_in'] ?? 'all';
 ?>
 
 <div class="list-container">
   <div class="title">
-    <h1>Tickets</h1>
+    <h1>Listado de Tickets</h1>
     <div class="export-button">
       <?php if (PermissionHelper::can('tickets-export')): ?>
         <a href="<?=

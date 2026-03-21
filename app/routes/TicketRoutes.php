@@ -22,7 +22,9 @@ class TicketRoutes
     $filters = [
       'status' => $_GET['status'] ?? null,
       'priority' => $_GET['priority'] ?? null,
-      'assigned_to' => $_GET['assigned_to'] ?? null
+      'assigned_to' => $_GET['assigned_to'] ?? null,
+      'q' => $_GET['q'] ?? null,
+      'search_in' => $_GET['search_in'] ?? 'all'
     ];
 
     $tickets = TicketsController::listAll($filters);
@@ -130,11 +132,13 @@ class TicketRoutes
   public static function ticketsExportCsvGet()
   {
     SessionController::requireLogin();
-
+    
     $filters = [
       'status' => $_GET['status'] ?? null,
       'priority' => $_GET['priority'] ?? null,
-      'assigned_to' => $_GET['assigned_to'] ?? null
+      'assigned_to' => $_GET['assigned_to'] ?? null,
+      'q' => $_GET['q'] ?? null,
+      'search_in' => $_GET['search_in'] ?? 'all'
     ];
 
     AuditLogsController::logExport(

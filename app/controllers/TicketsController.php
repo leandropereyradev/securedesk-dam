@@ -29,7 +29,9 @@ class TicketsController
     $filters = array_merge([
       'status' => null,
       'priority' => null,
-      'assigned_to' => null
+      'assigned_to' => null,
+      'q' => null,
+      'search_in' => 'all'
     ], $filters);
 
     try {
