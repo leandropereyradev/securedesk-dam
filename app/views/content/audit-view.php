@@ -10,6 +10,8 @@ $columns = AuditViewHelper::getColumns();
 
 $rows = $audits;
 $ref = "audit";
+
+$showSearch = false;
 ?>
 
 <div class="list-container">

@@ -132,6 +132,31 @@ class AuditLogsController
     ]);
   }
 
+  public static function logDashboardAccess(
+    int $userId,
+    string $context
+  ): void {
+    self::logAction([
+      'user_id' => $userId,
+      'action'  => 'access',
+      'entity'  => 'route',
+      'details' => $context
+    ]);
+  }
+
+  public static function logQuery(
+    int $userId,
+    string $query,
+    string $entity
+  ): void {
+    self::logAction([
+      'user_id' => $userId,
+      'action'  => 'search',
+      'entity'  => $entity,
+      'details' => $query
+    ]);
+  }
+
   private static function logAction(array $data): bool
   {
     $ip = IpHelper::getClientIp();

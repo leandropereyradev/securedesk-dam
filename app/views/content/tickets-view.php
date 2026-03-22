@@ -13,6 +13,7 @@ $columns = TicketsListViewHelper::getColumns();
 $rows = $tickets;
 $ref = "tickets";
 
+$showSearch = true;
 $selectedFilters = view('filters', []);
 $q = $selectedFilters['q'] ?? '';
 $searchIn = $selectedFilters['search_in'] ?? 'all';

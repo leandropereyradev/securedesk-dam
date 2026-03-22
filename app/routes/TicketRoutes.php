@@ -30,6 +30,21 @@ class TicketRoutes
     $tickets = TicketsController::listAll($filters);
     $users = UsersController::listAll();
 
+    if (!empty($filters['q'])) {
+
+      $cleanFilters = array_filter($filters, function ($value) {
+        return $value !== null && trim((string)$value) !== '';
+      });
+
+      $queryString = http_build_query($cleanFilters);
+
+      AuditLogsController::logQuery(
+        $_SESSION['user_id'],
+        $queryString,
+        'tickets'
+      );
+    }
+
     ViewContext::set('tickets', $tickets);
     ViewContext::set('users', $users);
     ViewContext::set('filters', $filters);
@@ -132,7 +147,7 @@ class TicketRoutes
   public static function ticketsExportCsvGet()
   {
     SessionController::requireLogin();
-    
+
     $filters = [
       'status' => $_GET['status'] ?? null,
       'priority' => $_GET['priority'] ?? null,

@@ -24,6 +24,8 @@ class AuditViewHelper
           'ticket_create' => 'Tickets Creados',
           'ticket_update' => 'Tickets Editados',
           'export' => 'Esportaciones',
+          'search' => 'Búsqueda explícita',
+          'access' => 'Acceso a Dashboard',
           'add_comment' => 'Comentarios añadidos'
         ]
       ]
