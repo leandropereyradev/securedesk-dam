@@ -13,6 +13,15 @@ class RedirectHelper
     );
   }
 
+  public static function attachmentError(string $message, int $ticketId): void
+  {
+    self::fail(
+      'attachment_error',
+      $message,
+      'ticket?id=' . $ticketId
+    );
+  }
+
   public static function to(string $route): void
   {
     header("Location: {$route}");

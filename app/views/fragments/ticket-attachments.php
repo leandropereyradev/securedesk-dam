@@ -3,6 +3,8 @@
 use app\helpers\PermissionHelper;
 use app\helpers\SecurityHelper;
 
+$error = $_SESSION['attachment_error'] ?? null;
+unset($_SESSION['attachment_error']);
 ?>
 
 <div class="attachment-container">
@@ -19,6 +21,12 @@ use app\helpers\SecurityHelper;
       <button type="submit">Subir</button>
     </form>
 
+  <?php if ($error): ?>
+    <div class="error-message">
+      <div><?= SecurityHelper::escapeXSS($error) ?></div>
+    </div>
+  <?php endif; ?>
+
   <?php endif; ?>
 
   <?php if (!empty($attachments)): ?>
@@ -30,7 +38,7 @@ use app\helpers\SecurityHelper;
           (<?= round($att['size'] / 1024, 1) ?> KB)
           subido por <?= SecurityHelper::escapeXSS($att['uploaded_by']) ?>
           el <?= $att['uploaded_at'] ?>
-          - <a href="attachment-download?id=<?= $att['id'] ?>">Descargar</a>
+          - <a href="attachment-download?id=<?= $att['id'] ?>&ticket_id=<?= $ticket['id'] ?>">Descargar</a>
         </li>
       <?php endforeach; ?>
     </ul>

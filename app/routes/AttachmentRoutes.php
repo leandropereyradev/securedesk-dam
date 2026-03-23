@@ -3,6 +3,7 @@
 namespace app\routes;
 
 use app\controllers\AttachmentsController;
+use app\controllers\AuditLogsController;
 use app\controllers\SessionController;
 use app\helpers\RedirectHelper;
 
@@ -14,7 +15,14 @@ class AttachmentRoutes
 
     $ticketId = (int)$_POST['ticket_id'];
 
-    AttachmentsController::upload($ticketId);
+    $attachmentId = AttachmentsController::upload($ticketId);
+
+    AuditLogsController::logAttachment(
+      $_SESSION['user_id'],
+      'upload',
+      $attachmentId,
+      "En Ticket #$ticketId"
+    );
 
     RedirectHelper::to('ticket?id=' . $ticketId);
     exit;
@@ -24,6 +32,16 @@ class AttachmentRoutes
   {
     SessionController::requireLogin();
 
-    AttachmentsController::download((int)$_GET['id']);
+    $attachmentId = (int)$_GET['id'];
+    $ticketId = (int)$_GET['ticket_id'];
+
+    AuditLogsController::logAttachment(
+      $_SESSION['user_id'],
+      'download',
+      $attachmentId,
+      "De Ticket #$ticketId"
+    );
+
+    AttachmentsController::download($attachmentId, $ticketId);
   }
 }

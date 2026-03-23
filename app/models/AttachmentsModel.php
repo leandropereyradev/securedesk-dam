@@ -8,9 +8,6 @@ use app\helpers\DateHelper;
 
 class AttachmentsModel
 {
-  private const STORAGE_PATH = ROOT . 'storage/attachments';
-  private const MAX_SIZE = 5 * 1024 * 1024; // 5MB
-
   public static function getByTicket(int $ticketId): array
   {
     $pdo = Database::getConnection();
@@ -31,28 +28,13 @@ class AttachmentsModel
     }, $attachments);
   }
 
-  public static function upload(int $ticketId, array $file, int $userId): bool
-  {
+  public static function upload(
+    int $ticketId,
+    array $file,
+    string $storedName,
+    int $userId,
+  ): int {
     $pdo = Database::getConnection();
-
-    if ($file['error'] !== UPLOAD_ERR_OK) {
-      return false;
-    }
-
-    if ($file['size'] > self::MAX_SIZE) {
-      return false;
-    }
-
-    if (!is_dir(self::STORAGE_PATH)) {
-      mkdir(self::STORAGE_PATH, 0755, true);
-    }
-
-    $storedName = bin2hex(random_bytes(16));
-    $destination = self::STORAGE_PATH . '/' . $storedName;
-
-    if (!move_uploaded_file($file['tmp_name'], $destination)) {
-      return false;
-    }
 
     $stmt = $pdo->prepare("
             INSERT INTO attachments
@@ -61,16 +43,18 @@ class AttachmentsModel
             (:ticket_id, :filename, :stored_name, :size, :uploaded_by)
         ");
 
-    return $stmt->execute([
+    $stmt->execute([
       ':ticket_id'   => $ticketId,
       ':filename'    => $file['name'],
       ':stored_name' => $storedName,
       ':size'        => $file['size'],
       ':uploaded_by' => $userId,
     ]);
+
+    return (int)$pdo->lastInsertId();
   }
 
-  public static function download(int $attachmentId): ?array
+  public static function download(int $attachmentId): array
   {
     $pdo = Database::getConnection();
 
@@ -78,20 +62,6 @@ class AttachmentsModel
     $stmt->execute([':id' => $attachmentId]);
     $att = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-    if (!$att) {
-      return null;
-    }
-
-    $filePath = self::STORAGE_PATH . '/' . $att['stored_name'];
-
-    if (!file_exists($filePath)) {
-      return null;
-    }
-
-    return [
-      'path' => $filePath,
-      'filename' => $att['filename'],
-      'size' => $att['size'],
-    ];
+    return $att;
   }
 }

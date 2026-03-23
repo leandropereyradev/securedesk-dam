@@ -157,6 +157,28 @@ class AuditLogsController
     ]);
   }
 
+  public static function logAttachment(
+    ?int $userId,
+    string $action,
+    string $entityId,
+    string $details = ''
+  ): void {
+
+    try {
+
+      self::logAction([
+        'user_id'   => $userId,
+        'action'    => $action,
+        'entity'    => 'attachment',
+        'entity_id' => $entityId,
+        'details'   => $details
+      ]);
+    } catch (\PDOException $e) {
+
+      error_log('Error registrando evento de descarga: ' . $e->getMessage());
+    }
+  }
+
   private static function logAction(array $data): bool
   {
     $ip = IpHelper::getClientIp();
