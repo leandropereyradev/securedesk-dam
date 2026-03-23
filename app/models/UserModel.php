@@ -6,20 +6,33 @@ use app\core\Database;
 
 class UserModel
 {
-  public static function getAll(): array
+  public static function listAll(array $filters = []): array
   {
     $pdo = Database::getConnection();
 
-    $sql = "SELECT
-                id,
-                username,
-                role 
-            FROM users";
-    $stmt = $pdo->query($sql);
+    $conditions = [];
+    $params = [];
 
+    if (!empty($filters['role'])) {
+      $conditions[] = 'u.role = :role';
+      $params[':role'] = $filters['role'];
+    }
+
+    $where = $conditions ? 'WHERE ' . implode(' AND ', $conditions) : '';
+
+    $stmt = $pdo->prepare("
+            SELECT
+                u.id,
+                u.username,
+                u.role,
+                u.created_at
+            FROM users u
+            $where");
+
+    $stmt->execute($params);
     $users = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-    return $users ?: [];
+    return $users;
   }
 
   public static function getByUsername(string $username): array

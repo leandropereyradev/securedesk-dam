@@ -35,6 +35,10 @@ return [
     'reader' => [
       'dashboard',
       'tickets',
+      'ticket-report',
+      'ticket-export-pdf',
+      'tickets-export',
+      'tickets-export-csv',
       'critical-tickets',
       'unassigned-tickets',
       'ticket',

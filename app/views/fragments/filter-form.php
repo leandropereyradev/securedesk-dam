@@ -4,10 +4,6 @@ use app\helpers\SecurityHelper;
 ?>
 <div class="list-filter-container">
   <form method="GET">
-    <?php
-    $selectedFilters = view('filters', []);
-    ?>
-
     <div class="states">
       <?php foreach ($filters as $filter): ?>
         <?php $selected = $selectedFilters[$filter['name']] ?? ''; ?>
@@ -47,7 +43,7 @@ use app\helpers\SecurityHelper;
 
     <div class="button-container">
       <button type="submit" class="button">Filtrar</button>
-      <a href="<?= SecurityHelper::escapeXSS($ref) ?>" class="button">Ver todos los tickets</a>
+      <a href="<?= SecurityHelper::escapeXSS($ref) ?>" class="button">Ver todos</a>
     </div>
   </form>
 </div>
