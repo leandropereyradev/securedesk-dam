@@ -2,13 +2,13 @@
 
 namespace app\controllers;
 
+use app\helpers\FileValidatorHelper;
 use app\helpers\RedirectHelper;
 use app\models\AttachmentsModel;
 
 class AttachmentsController
 {
   private const STORAGE_PATH = ROOT . 'storage/attachments';
-  private const MAX_SIZE = 5 * 1024 * 1024;
 
   public static function getAttachmentsByTicket(int $ticketId): array
   {
@@ -23,30 +23,10 @@ class AttachmentsController
 
       $file = $_FILES['attachment'] ?? null;
 
-      if (!$file) {
-        RedirectHelper::attachmentError(
-          'Error al subir el archivo.',
-          $ticketId
-        );
+      $error = FileValidatorHelper::validate($file);
 
-        return null;
-      }
-
-      if ($file['error'] !== UPLOAD_ERR_OK) {
-        RedirectHelper::attachmentError(
-          'Error en la subida del archivo.',
-          $ticketId
-        );
-
-        return null;
-      }
-
-      if ($file['size'] > self::MAX_SIZE) {
-        RedirectHelper::attachmentError(
-          'El archivo supera el tamaño máximo permitido.',
-          $ticketId
-        );
-
+      if ($error) {
+        RedirectHelper::attachmentError($error, $ticketId);
         return null;
       }
 
@@ -58,12 +38,10 @@ class AttachmentsController
       $destination = self::STORAGE_PATH . '/' . $storedName;
 
       if (!move_uploaded_file($file['tmp_name'], $destination)) {
-
         RedirectHelper::attachmentError(
           'No se pudo mover el archivo.',
           $ticketId
         );
-
         return null;
       }
 
@@ -79,7 +57,6 @@ class AttachmentsController
           'No se pudo guardar el archivo en base de datos.',
           $ticketId
         );
-
         return null;
       }
 
@@ -89,7 +66,6 @@ class AttachmentsController
         'Error inesperado al subir el archivo.',
         $ticketId
       );
-
       return null;
     }
   }
