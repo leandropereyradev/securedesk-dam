@@ -25,7 +25,8 @@ class UserModel
                 u.id,
                 u.username,
                 u.role,
-                u.created_at
+                u.created_at,
+                u.updated_at
             FROM users u
             $where");
 
@@ -46,5 +47,22 @@ class UserModel
     $user = $stmt->fetch(\PDO::FETCH_ASSOC);
 
     return $user ?: [];
+  }
+
+  public static function updatePassword(int $userId, string $hash): bool
+  {
+    $pdo = Database::getConnection();
+
+    $stmt = $pdo->prepare("
+    UPDATE users
+        SET password_hash = :password_hash,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = :id
+  ");
+
+    return $stmt->execute([
+      ':password_hash' => $hash,
+      ':id' => $userId
+    ]);
   }
 }

@@ -15,4 +15,7 @@
 <link rel="stylesheet" href="<?= APP_URL ?>public/assets/styles/report.css">
 <link rel="stylesheet" href="<?= APP_URL ?>public/assets/styles/report-print.css">
 <link rel="stylesheet" href="<?= APP_URL ?>public/assets/styles/error.css">
+<link rel="stylesheet" href="<?= APP_URL ?>public/assets/styles/profile.css">
+<link rel="stylesheet" href="<?= APP_URL ?>public/assets/styles/flash-messages.css">
 <link rel="shortcut icon" href="<?= APP_URL ?>public/assets/images/favicon.ico" type="image/x-icon">
+<script src="<?= APP_URL ?>public/assets/js/password-validator.js" defer></script>

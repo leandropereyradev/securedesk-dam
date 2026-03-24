@@ -179,6 +179,22 @@ class AuditLogsController
     }
   }
 
+  public static function logChangePassword(int $userId): void
+  {
+    try {
+
+      self::logAction([
+        'user_id'   => $userId,
+        'action'    => 'password',
+        'entity'    => 'user',
+        'details'   => 'Cambio de password'
+      ]);
+    } catch (\PDOException $e) {
+
+      error_log('Error registrando evento de descarga: ' . $e->getMessage());
+    }
+  }
+
   private static function logAction(array $data): bool
   {
     $ip = IpHelper::getClientIp();

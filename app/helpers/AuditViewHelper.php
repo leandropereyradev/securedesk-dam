@@ -20,6 +20,7 @@ class AuditViewHelper
         'options' => [
           'login' => 'Login',
           'logout' => 'Logout',
+          'password' => 'Password',
           'login_blocked' => 'Bloqueos de usuario',
           'ticket_create' => 'Tickets Creados',
           'ticket_update' => 'Tickets Editados',

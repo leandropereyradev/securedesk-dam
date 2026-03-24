@@ -39,6 +39,10 @@ class UsersListViewHelper
       [
         'label' => 'Fecha de creación',
         'field' => 'created_at'
+      ],
+      [
+        'label' => 'Fecha de actualización',
+        'field' => 'updated_at'
       ]
     ];
   }
