@@ -2,8 +2,6 @@
 
 namespace app\middlewares;
 
-use app\helpers\RedirectHelper;
-
 class RoleMiddleware
 {
   private static array $config;
@@ -15,38 +13,34 @@ class RoleMiddleware
     }
   }
 
-  public static function check(string $viewName)
+  public static function check(string $viewName): bool
   {
     self::loadConfig();
-    // Vistas públicas
+
     if (in_array($viewName, self::$config['public'], true)) {
-      return;
+      return true;
     }
 
-    // Requiere login
     if (!isset($_SESSION['user_id'])) {
-      RedirectHelper::to('login');
-      exit;
+      return false;
     }
 
-    // Admin = acceso total
     $role = $_SESSION['role'] ?? null;
+
     if (
       isset(self::$config['roles'][$role]) &&
       in_array('*', self::$config['roles'][$role], true)
     ) {
-      return;
+      return true;
     }
 
-    // Permisos normales
     if (
-      !isset(self::$config['roles'][$role]) ||
-      !in_array($viewName, self::$config['roles'][$role], true)
+      isset(self::$config['roles'][$role]) &&
+      in_array($viewName, self::$config['roles'][$role], true)
     ) {
-
-      http_response_code(403);
-      require_once ROOT . 'app/views/content/403-view.php';
-      exit;
+      return true;
     }
+
+    return false;
   }
 }

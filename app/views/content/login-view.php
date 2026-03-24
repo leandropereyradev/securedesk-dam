@@ -10,7 +10,7 @@ unset($_SESSION['login_error']);
   <h2>Iniciar sesión</h2>
 
   <form class="login-form" method="POST">
-    
+
     <?= SecurityHelper::csrfField(); ?>
 
     <div>

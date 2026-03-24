@@ -1,6 +1,7 @@
 <?php
 
 use app\helpers\PermissionHelper;
+use app\helpers\SecurityHelper;
 use app\helpers\TicketsListViewHelper;
 use app\helpers\UrlHelper;
 
@@ -17,6 +18,9 @@ $showSearch = true;
 $selectedFilters = view('filters', []);
 $q = $selectedFilters['q'] ?? '';
 $searchIn = $selectedFilters['search_in'] ?? 'all';
+
+$error = $_SESSION['ticket_error'] ?? null;
+unset($_SESSION['ticket_error']);
 ?>
 
 <div class="list-container">
@@ -36,7 +40,14 @@ $searchIn = $selectedFilters['search_in'] ?? 'all';
     </div>
   </div>
 
-  <?php require_once ROOT . "app/views/fragments/filter-form.php"; ?>
+  <div>
+    <?php require_once ROOT . "app/views/fragments/filter-form.php"; ?>
+    <!-- <?php if ($error): ?> -->
+    <div class="error-message">
+      <div><?= SecurityHelper::escapeXSS($error) ?></div>
+    </div>
+    <!-- <?php endif; ?> -->
+  </div>
 
   <?php if (empty($tickets)): ?>
     <p>No hay tickets disponibles.</p>

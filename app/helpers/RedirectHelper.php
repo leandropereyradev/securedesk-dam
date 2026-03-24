@@ -22,6 +22,15 @@ class RedirectHelper
     );
   }
 
+  public static function TicketError(string $message): void
+  {
+    self::fail(
+      'ticket_error',
+      $message,
+      'tickets'
+    );
+  }
+
   public static function to(string $route): void
   {
     header("Location: {$route}");

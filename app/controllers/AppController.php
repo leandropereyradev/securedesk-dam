@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\middlewares\RoleMiddleware;
 use app\core\RouteRegistry;
+use app\helpers\ErrorPageHelper;
 use app\helpers\SecurityHelper;
 
 class AppController
@@ -31,18 +32,22 @@ class AppController
       $_SERVER['REQUEST_METHOD']
     );
 
-    // Verifica permisos de rol
-    RoleMiddleware::check($this->viewName);
+    RouteRegistry::dispatch($methodName);
 
-    // Ejecuta la ruta correspondiente si existe
-    RouteRegistry::dispatch($methodName);    
-
-    // Obtiene la vista
     $viewPath = $this->viewsController->getViewsController($this->viewName);
 
     if ($viewPath === '404') {
-      require_once ROOT . "app/views/content/404-view.php";
-      exit;
+      return ErrorPageHelper::show(404);
+    }
+
+    if (!RoleMiddleware::check($this->viewName)) {
+
+      if (!isset($_SESSION['user_id'])) {
+        header("Location: login");
+        exit;
+      }
+
+      return ErrorPageHelper::show(403);
     }
 
     return $viewPath;

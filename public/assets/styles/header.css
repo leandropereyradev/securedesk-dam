@@ -6,6 +6,8 @@ header {
   justify-content: space-between;
   align-items: center;
   height: 80px;
+  width: 100%;
+  position: fixed;
 }
 
 header h1 {

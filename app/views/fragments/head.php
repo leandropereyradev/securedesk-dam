@@ -14,4 +14,5 @@
 <link rel="stylesheet" href="<?= APP_URL ?>public/assets/styles/table.css">
 <link rel="stylesheet" href="<?= APP_URL ?>public/assets/styles/report.css">
 <link rel="stylesheet" href="<?= APP_URL ?>public/assets/styles/report-print.css">
+<link rel="stylesheet" href="<?= APP_URL ?>public/assets/styles/error.css">
 <link rel="shortcut icon" href="<?= APP_URL ?>public/assets/images/favicon.ico" type="image/x-icon">

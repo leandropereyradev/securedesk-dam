@@ -70,9 +70,10 @@ class TicketRoutes
 
     $ticket = TicketsController::getTicketById($ticketId);
 
-    if (!$ticket) {
-      RedirectHelper::to('tickets');
-      exit;
+    if ($ticket === null) {
+      RedirectHelper::TicketError(
+        'Ticket no encontrado. Haz sido redirigido a Lista de Tickets'
+      );
     }
 
     $ticket['attachments'] = AttachmentsController::getAttachmentsByTicket($ticketId);
@@ -115,7 +116,7 @@ class TicketRoutes
     );
 
     if (!$result['success']) {
-      $_SESSION['ticket_error'] = $result['error']; // flash OK
+      $_SESSION['ticket_error'] = $result['error'];
     }
 
     RedirectHelper::to('ticket?id=' . $ticketId);

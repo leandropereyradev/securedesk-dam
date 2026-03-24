@@ -25,11 +25,15 @@ class TicketModel
 
     $ticket = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    if (!$ticket) {
+      return null;
+    }
+
     if ($ticket['assigned_to_username'] === null) {
       $ticket['assigned_to_username'] = 'Sin Asignar';
     }
 
-    return $ticket ?: null;
+    return $ticket;
   }
 
   public static function listAll(array $filters = []): array
