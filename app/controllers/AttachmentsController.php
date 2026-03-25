@@ -15,7 +15,7 @@ class AttachmentsController
     return AttachmentsModel::getByTicket($ticketId);
   }
 
-  public static function upload(int $ticketId): ?int
+  public static function upload(int $ticketId): array
   {
     SessionController::requireLogin();
 
@@ -26,8 +26,9 @@ class AttachmentsController
       $error = FileValidatorHelper::validate($file);
 
       if ($error) {
-        RedirectHelper::attachmentError($error, $ticketId);
-        return null;
+        return [
+          'error' => $error
+        ];
       }
 
       if (!is_dir(self::STORAGE_PATH)) {
@@ -38,11 +39,9 @@ class AttachmentsController
       $destination = self::STORAGE_PATH . '/' . $storedName;
 
       if (!move_uploaded_file($file['tmp_name'], $destination)) {
-        RedirectHelper::attachmentError(
-          'No se pudo mover el archivo.',
-          $ticketId
-        );
-        return null;
+        return [
+          'error' => 'No se pudo mover el archivo.'
+        ];
       }
 
       $attachmentId = AttachmentsModel::upload(
@@ -53,24 +52,23 @@ class AttachmentsController
       );
 
       if (!$attachmentId) {
-        RedirectHelper::attachmentError(
-          'No se pudo guardar el archivo en base de datos.',
-          $ticketId
-        );
-        return null;
+        return [
+          'error' => 'No se pudo guardar el archivo en base de datos.'
+        ];
       }
 
-      return $attachmentId;
+      return [
+        'attachmentId' => $attachmentId,
+        "success" => 'Archivo subido correctamente'
+      ];
     } catch (\Throwable $e) {
-      RedirectHelper::attachmentError(
-        'Error inesperado al subir el archivo.',
-        $ticketId
-      );
-      return null;
+      return [
+        'error' => 'Error inesperado al subir el archivo.'
+      ];
     }
   }
 
-  public static function download(int $attachmentId, int $ticketId): void
+  public static function download(int $attachmentId): array
   {
     SessionController::requireLogin();
 
@@ -79,19 +77,17 @@ class AttachmentsController
       $file = AttachmentsModel::download($attachmentId);
 
       if (!$file) {
-        RedirectHelper::attachmentError(
-          'Archivo no encontrado.',
-          $ticketId
-        );
+        return [
+          'error' => 'Archivo no encontrado.'
+        ];
       }
 
       $fileDesteny = self::STORAGE_PATH . '/' . $file['stored_name'];
 
       if (!file_exists($fileDesteny)) {
-        RedirectHelper::attachmentError(
-          'Archivo no disponible en el servidor.',
-          $ticketId
-        );
+        return [
+          'error' => 'Archivo no disponible en el servidor.'
+        ];
       }
 
       header('Content-Type: application/octet-stream');
@@ -99,13 +95,13 @@ class AttachmentsController
       header('Content-Length: ' . $file['size']);
 
       readfile($fileDesteny);
+
       exit;
     } catch (\Throwable $e) {
 
-      RedirectHelper::attachmentError(
-        'Error al descargar el archivo.',
-        $ticketId
-      );
+      return [
+        'error' => 'Error al descargar el archivo.'
+      ];
     }
   }
 }

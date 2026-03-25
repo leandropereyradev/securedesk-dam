@@ -2,9 +2,6 @@
 
 use app\helpers\PermissionHelper;
 use app\helpers\SecurityHelper;
-
-$error = $_SESSION['attachment_error'] ?? null;
-unset($_SESSION['attachment_error']);
 ?>
 
 <div class="attachment-container">
@@ -21,11 +18,7 @@ unset($_SESSION['attachment_error']);
       <button type="submit">Subir</button>
     </form>
 
-  <?php if ($error): ?>
-    <div class="error-message">
-      <div><?= SecurityHelper::escapeXSS($error) ?></div>
-    </div>
-  <?php endif; ?>
+    <?php require_once ROOT . "app/views/fragments/flash-messages.php"; ?>
 
   <?php endif; ?>
 

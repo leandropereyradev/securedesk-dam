@@ -6,24 +6,6 @@ use app\helpers\FlashHelper;
 
 class RedirectHelper
 {
-  public static function loginError(string $message): void
-  {
-    self::fail(
-      'login_error',
-      $message,
-      'login'
-    );
-  }
-
-  public static function attachmentError(string $message, int $ticketId): void
-  {
-    self::fail(
-      'attachment_error',
-      $message,
-      'ticket?id=' . $ticketId
-    );
-  }
-
   public static function TicketError(string $message): void
   {
     self::fail(

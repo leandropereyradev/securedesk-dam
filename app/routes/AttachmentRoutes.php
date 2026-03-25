@@ -15,17 +15,26 @@ class AttachmentRoutes
 
     $ticketId = (int)$_POST['ticket_id'];
 
-    $attachmentId = AttachmentsController::upload($ticketId);
+    $attachment = AttachmentsController::upload($ticketId);
+
+    if ($attachment['error']) {
+      RedirectHelper::error(
+        'ticket?id=' . $ticketId,
+        $attachment['error']
+      );
+    }
 
     AuditLogsController::logAttachment(
       $_SESSION['user_id'],
       'upload',
-      $attachmentId,
+      $attachment['attachmentId'],
       "En Ticket #$ticketId"
     );
 
-    RedirectHelper::to('ticket?id=' . $ticketId);
-    exit;
+    RedirectHelper::success(
+      'ticket?id=' . $ticketId,
+      $attachment['success']
+    );
   }
 
   public static function attachmentDownloadGet()
@@ -35,13 +44,20 @@ class AttachmentRoutes
     $attachmentId = (int)$_GET['id'];
     $ticketId = (int)$_GET['ticket_id'];
 
+    $attachment = AttachmentsController::download($attachmentId);
+
+    if ($attachment['error']) {
+      RedirectHelper::error(
+        'ticket?id=' . $ticketId,
+        $attachment['error']
+      );
+    }
+
     AuditLogsController::logAttachment(
       $_SESSION['user_id'],
       'download',
       $attachmentId,
       "De Ticket #$ticketId"
     );
-
-    AttachmentsController::download($attachmentId, $ticketId);
   }
 }
