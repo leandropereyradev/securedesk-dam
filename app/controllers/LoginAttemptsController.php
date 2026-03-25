@@ -11,57 +11,35 @@ class LoginAttemptsController
 
   public static function isUserBlocked(int $userId): bool
   {
-    $blocks = LoginAttemptsModel::getUserBlocks($userId);
-
-    foreach ($blocks as $blockedUntil) {
-      if (strtotime($blockedUntil) > time()) {
-        return true;
-      }
-    }
-
-    return false;
+    return !empty(LoginAttemptsModel::getUserBlocks($userId));
   }
 
   public static function isIpBlocked(string $ip): bool
   {
-    $blocks = LoginAttemptsModel::getIpBlocks($ip);
-
-    foreach ($blocks as $blockedUntil) {
-      if (strtotime($blockedUntil) > time()) {
-        return true;
-      }
-    }
-
-    return false;
+    return !empty(LoginAttemptsModel::getIpBlocks($ip));
   }
 
   public static function recordFailedAttempt(int $userId, string $ip): bool
   {
     $row = LoginAttemptsModel::get($userId, $ip);
 
-    // Primer intento desde esta IP
+    // Primer intento
     if (!$row) {
       LoginAttemptsModel::insertAttempt($userId, $ip);
       return false;
     }
 
     $attempts = $row['attempts'] + 1;
-    $blockedUntil = null;
 
     if ($attempts >= self::MAX_ATTEMPTS) {
-      $blockedUntil = gmdate(
-        'Y-m-d H:i:s',
-        strtotime('+' . self::BLOCK_MINUTES . ' minutes')
-      );
+      LoginAttemptsModel::block($row['id'], $attempts, self::BLOCK_MINUTES);
+      return true;
     }
 
-    LoginAttemptsModel::updateAttempt(
-      $row['id'],
-      $attempts,
-      $blockedUntil
-    );
+    // Solo actualiza intentos
+    LoginAttemptsModel::updateAttempts($row['id'], $attempts);
 
-    return $blockedUntil !== null;
+    return false;
   }
 
   public static function getAttempts(int $userId, string $ip): int

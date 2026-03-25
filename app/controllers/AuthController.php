@@ -20,26 +20,40 @@ class AuthController
 
     if ($username === '' || $password === '') {
 
-      RedirectHelper::loginError('Debes completar todos los campos.');
+      RedirectHelper::error(
+        'login',
+        'Debes completar todos los campos.'
+      );
     }
 
     try {
       if (LoginAttemptsController::isIpBlocked($ip)) {
 
-        RedirectHelper::loginError('Demasiados intentos. Inténtalo en 5 minutos.');
+        RedirectHelper::error(
+          'login',
+          'Demasiados intentos. Inténtalo en 5 minutos.'
+        );
       }
 
       $user = UsersController::getByUsername($username);
 
       if (!$user) {
-        RedirectHelper::loginError('Usuario o contraseña incorrectos.');
+        RedirectHelper::error(
+          'login',
+          'Usuario o contraseña incorrectos.'
+        );
       }
 
       $userId = $user['id'];
 
-      if (LoginAttemptsController::isUserBlocked($userId)) {
-
-        RedirectHelper::loginError('Demasiados intentos. Inténtalo en 5 minutos.');
+      if (
+        LoginAttemptsController::isUserBlocked($userId) ||
+        LoginAttemptsController::isIpBlocked($ip)
+      ) {
+        RedirectHelper::error(
+          'login',
+          'Demasiados intentos. Inténtalo en 5 minutos.'
+        );
       }
 
       if (!password_verify($password, $user['password_hash'])) {
@@ -53,16 +67,23 @@ class AuthController
             "Usuario {$username} bloqueado por demasiados intentos"
           );
 
-          RedirectHelper::loginError('Demasiados intentos. Vuélvalo a intentar en 5 minutos.');
+          RedirectHelper::error(
+            'login',
+            'Demasiados intentos. Vuélvalo a intentar en 5 minutos.'
+          );
         }
 
         if ($attempts === 4) {
-          RedirectHelper::loginError(
+          RedirectHelper::error(
+            'login',
             'Te queda un intento antes de que debas esperar 5 minutos'
           );
         }
 
-        RedirectHelper::loginError('Usuario o contraseña incorrectos.');
+        RedirectHelper::error(
+          'login',
+          'Usuario o contraseña incorrectos.'
+        );
       }
 
       LoginAttemptsController::reset($userId);
@@ -78,7 +99,10 @@ class AuthController
       RedirectHelper::to('dashboard');
     } catch (\PDOException $e) {
 
-      RedirectHelper::loginError('Error de base de datos.');
+      RedirectHelper::error(
+        'login',
+        'Error de base de datos.'
+      );
     }
   }
 

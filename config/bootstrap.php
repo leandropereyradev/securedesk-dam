@@ -5,3 +5,5 @@ require_once __DIR__ . '/autoload.php';
 require_once __DIR__ . '/init.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__  . '/../app/helpers/ViewHelper.php';
+
+date_default_timezone_set('Europe/Madrid');

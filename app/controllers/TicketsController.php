@@ -246,7 +246,7 @@ class TicketsController
 
       return [
         'stats' => $stats,
-        'updated_at' => DateHelper::utcToMadrid(gmdate('Y-m-d H:i:s')),
+        'updated_at' => DateHelper::utcToMadrid(date('Y-m-d H:i:s')),
         'distribution' => $distribution,
       ];
     } catch (\PDOException $e) {

@@ -1,9 +1,6 @@
 <?php
 
 use app\helpers\SecurityHelper;
-
-$error = $_SESSION['login_error'] ?? null;
-unset($_SESSION['login_error']);
 ?>
 
 <div class="login-container">
@@ -15,19 +12,15 @@ unset($_SESSION['login_error']);
 
     <div>
       <label for="username">Usuario</label>
-      <input type="text" name="username" required>
+      <input type="text" name="username">
     </div>
 
     <div>
       <label for="password">Contraseña</label>
-      <input type="password" name="password" required>
+      <input type="password" name="password">
     </div>
 
-    <?php if ($error): ?>
-      <div class="error-message">
-        <div><?= SecurityHelper::escapeXSS($error) ?></div>
-      </div>
-    <?php endif; ?>
+    <?php require_once ROOT . "app/views/fragments/flash-messages.php"; ?>
 
     <button class="button" type="submit">Ingresar</button>
   </form>

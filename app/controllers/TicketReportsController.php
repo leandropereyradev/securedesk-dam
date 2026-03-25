@@ -21,7 +21,7 @@ class TicketReportsController
 
     $report = [
       'generated_by' => $_SESSION['username'],
-      'generated_at' => DateHelper::utcToMadrid(gmdate('Y-m-d H:i')),
+      'generated_at' => DateHelper::utcToMadrid(date('Y-m-d H:i')),
       'ticket' => $ticket,
       'comments' => $comments,
       'history' => $history,

@@ -33,11 +33,11 @@ class LoginAttemptsModel
     $pdo = Database::getConnection();
 
     $stmt = $pdo->prepare("
-      SELECT blocked_until
-      FROM login_attempts
-      WHERE user_id = :user_id
-      AND blocked_until IS NOT NULL
-    ");
+    SELECT blocked_until
+    FROM login_attempts
+    WHERE user_id = :user_id
+    AND blocked_until > DATETIME('now')
+  ");
 
     $stmt->execute([
       ':user_id' => $user_id
@@ -51,11 +51,11 @@ class LoginAttemptsModel
     $pdo = Database::getConnection();
 
     $stmt = $pdo->prepare("
-      SELECT blocked_until
-      FROM login_attempts
-      WHERE ip_address = :ip
-      AND blocked_until IS NOT NULL
-    ");
+    SELECT blocked_until
+    FROM login_attempts
+    WHERE ip_address = :ip
+    AND blocked_until > DATETIME('now')
+  ");
 
     $stmt->execute([
       ':ip' => $ip
@@ -80,25 +80,39 @@ class LoginAttemptsModel
     ]);
   }
 
-  public static function updateAttempt(
-    int $id,
-    int $attempts,
-    ?string $blockedUntil
-  ): void {
-
+  public static function updateAttempts(int $id, int $attempts): void
+  {
     $pdo = Database::getConnection();
 
     $stmt = $pdo->prepare("
-      UPDATE login_attempts
-      SET attempts = :attempts,
-          blocked_until = :blocked_until,
-          last_attempt = CURRENT_TIMESTAMP
-      WHERE id = :id
-    ");
+    UPDATE login_attempts
+    SET attempts = :attempts,
+        last_attempt = CURRENT_TIMESTAMP
+    WHERE id = :id
+  ");
 
     $stmt->execute([
       ':attempts' => $attempts,
-      ':blocked_until' => $blockedUntil,
+      ':id' => $id
+    ]);
+  }
+
+  public static function block(int $id, int $attempts, int $minutes): void
+  {
+    $pdo = Database::getConnection();
+
+    $minutes = (int)$minutes;
+
+    $stmt = $pdo->prepare("
+    UPDATE login_attempts
+    SET attempts = :attempts,
+        blocked_until = DATETIME('now', '+$minutes minutes'),
+        last_attempt = CURRENT_TIMESTAMP
+    WHERE id = :id
+  ");
+
+    $stmt->execute([
+      ':attempts' => $attempts,
       ':id' => $id
     ]);
   }

@@ -37,6 +37,10 @@ class UsersController
     try {
       $user = UserModel::getByUsername($username);
 
+      if (!$user) {
+        return [];
+      }
+
       $user['created_at'] = DateHelper::utcToMadrid($user['created_at']);
 
       return $user;
