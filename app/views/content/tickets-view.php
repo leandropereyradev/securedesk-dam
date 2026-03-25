@@ -18,9 +18,6 @@ $showSearch = true;
 $selectedFilters = view('filters', []);
 $q = $selectedFilters['q'] ?? '';
 $searchIn = $selectedFilters['search_in'] ?? 'all';
-
-$error = $_SESSION['ticket_error'] ?? null;
-unset($_SESSION['ticket_error']);
 ?>
 
 <div class="list-container">
@@ -42,11 +39,8 @@ unset($_SESSION['ticket_error']);
 
   <div>
     <?php require_once ROOT . "app/views/fragments/filter-form.php"; ?>
-    <!-- <?php if ($error): ?> -->
-    <div class="error-message">
-      <div><?= SecurityHelper::escapeXSS($error) ?></div>
-    </div>
-    <!-- <?php endif; ?> -->
+
+    <?php require_once ROOT . "app/views/fragments/flash-messages.php"; ?>
   </div>
 
   <?php if (empty($tickets)): ?>

@@ -125,7 +125,8 @@ class TicketsController
 
       return [
         'success' => true,
-        'ticket_id' => $ticketId
+        'ticket_id' => $ticketId,
+        'title' => $title
       ];
     } catch (\PDOException $e) {
 

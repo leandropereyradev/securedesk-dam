@@ -55,11 +55,16 @@ class TicketRoutes
     $result = TicketsController::create();
 
     if (!$result['success']) {
-      $_SESSION['ticket_error'] = $result['error'];
+      RedirectHelper::error(
+        'tickets',
+        $result['error']
+      );
     }
 
-    RedirectHelper::to('tickets');
-    exit;
+    RedirectHelper::success(
+      'tickets',
+      "Ticket #{$result['ticket_id']} - '{$result['title']}' creado con éxito"
+    );
   }
 
   public static function ticketGet()
@@ -71,7 +76,8 @@ class TicketRoutes
     $ticket = TicketsController::getTicketById($ticketId);
 
     if ($ticket === null) {
-      RedirectHelper::TicketError(
+      RedirectHelper::error(
+        'tickets',
         'Ticket no encontrado. Haz sido redirigido a Lista de Tickets'
       );
     }
@@ -116,11 +122,16 @@ class TicketRoutes
     );
 
     if (!$result['success']) {
-      $_SESSION['ticket_error'] = $result['error'];
+      RedirectHelper::error(
+        'tickets',
+        $result['error']
+      );
     }
 
-    RedirectHelper::to('ticket?id=' . $ticketId);
-    exit;
+    RedirectHelper::success(
+      'ticket?id=' . $ticketId,
+      "Ticket editado correctamente"
+    );
   }
 
   public static function ticketReportGet()

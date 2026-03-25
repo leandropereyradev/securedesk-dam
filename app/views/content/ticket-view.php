@@ -12,6 +12,8 @@ $attachments = $ticket['attachments'] ?? [];
   <div>
     <?php require_once ROOT . "app/views/fragments/ticket-card.php"; ?>
 
+    <?php require_once ROOT . "app/views/fragments/flash-messages.php"; ?>
+
     <?php require_once ROOT . "app/views/fragments/ticket-actions.php"; ?>
 
     <?php require_once ROOT . "app/views/fragments/ticket-attachments.php"; ?>

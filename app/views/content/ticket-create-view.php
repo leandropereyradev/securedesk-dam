@@ -9,13 +9,6 @@ use app\helpers\SecurityHelper;
 
     <h2>Nuevo ticket</h2>
 
-    <?php if (!empty($_SESSION['ticket_error'])): ?>
-      <div class="error-message">
-        <?= SecurityHelper::escapeXSS($_SESSION['ticket_error']) ?>
-      </div>
-      <?php unset($_SESSION['ticket_error']); ?>
-    <?php endif; ?>
-
     <label>
       Título *
       <input
