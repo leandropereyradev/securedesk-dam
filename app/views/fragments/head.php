@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="<?= APP_URL ?>public/assets/styles/main.css">
 <link rel="stylesheet" href="<?= APP_URL ?>public/assets/styles/header.css">
 <link rel="stylesheet" href="<?= APP_URL ?>public/assets/styles/nav.css">
+<link rel="stylesheet" href="<?= APP_URL ?>public/assets/styles/home.css">
 <link rel="stylesheet" href="<?= APP_URL ?>public/assets/styles/dashboard.css">
 <link rel="stylesheet" href="<?= APP_URL ?>public/assets/styles/login.css">
 <link rel="stylesheet" href="<?= APP_URL ?>public/assets/styles/list-container.css">
