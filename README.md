@@ -1,18 +1,17 @@
+# SecureDesk DAM
+
 <p align="center">
-  <img src="public/assets/images/secureDesk.png" width="300" alt="SecureDesk Logo">
+  <img src="public/assets/images/secureDesk.png" width="180" alt="SecureDesk Logo">
 </p>
 
-<h1 align="center" style="font-size: 60px; font-weight: bold;">SecureDesk DAM</h1>
+<h1 align="center"><span style="font-size:50px;">SecureDesk DAM</span></h1>
 
 ---
 
-## Installation & Setup
+## 🚀 Overview
 
-### Prerequisites
-
-- XAMPP installed and running
-- PHP 7.4 or higher
-- DOMPdf (for PDF generation) - See installation instructions below
+SecureDesk is a ticket management system built with a custom MVC architecture in PHP.  
+It provides full lifecycle management of support tickets, including tracking, auditing, reporting, and secure user access control.
 
 ---
 
@@ -25,136 +24,181 @@ For the **project delivery**, the application already includes:
 - Initial users
 - Seeded tickets data
 
-👉 This means the application can be tested **without running any initialization scripts**.
+👉 This allows immediate testing without setup.
 
-⚠️ This setup is **only for the project delivery**.  
-If someone clones the repository from GitHub, these files **are NOT included**, so they must manually:
-
-- Run the database initialization script
-- Run the ticket seeding script
+⚠️ This applies ONLY to the delivered package.  
+If cloned from GitHub, you MUST run initialization scripts.
 
 ---
 
-### Installing DOMPdf
+## ⚙️ Setup
 
-DOMPdf is required for PDF report generation.
-
-In the project root, run:
+### Install dependencies
 ```
 composer install
 ```
-
----
-
-### Steps to Run
-
-1. **Start XAMPP**
-
-- Open XAMPP Control Panel
-- Click "Start" next to Apache
-
-2. **Access the Application**
-
-- Clone the repository into the `xampp/htdocs` folder.  
-- If the folder name is different, **rename it to `securedesk-dam`**, since the application URL is hardcoded as:
-
-http://localhost/securedesk-dam/
-
-- Open your browser and go to:
+### Run locally
 
 http://localhost/securedesk-dam
 
 ---
 
-## Database Initialization (Manual Setup)
-
-If you need to recreate the database manually:
-
-From the project root:
+## 🗄️ Database Initialization
 ```
-C:\xampp\htdocs\securedesk-dam>
+cd C:\xampp\htdocs\securedesk-dam
 ```
-Run:
 ```
 php config\db_init.php
 ```
-👉 This will:
 
-- Create the database **securedesk**
-- Create all required tables:
-  - users
-  - tickets
-  - attachments
-  - ticket_comments
-  - ticket_history
-  - audit_logs
-  - login_attempts
+Creates:
 
-👉 It will also create the initial users:
-
-- AdminLeandro (role: admin | username: admin | password: admin)
-- TechLeandro (role: technician | username: technician | password: technician)
-- ReaderLeandro (role: reader | username: reader | password: reader)
+- securedesk database
+- 7 tables
+- 3 users:
+  - admin / admin
+  - technician / technician
+  - reader / reader
 
 ---
 
-## Seeding Data (Optional)
+## 🌱 Seed Data
 
-To populate tickets for testing:
-
-From the project root:
 ```
 php db/seeds/tickets_seed.php
 ```
-👉 This will insert sample tickets into the database.
 
 ---
 
-## Roles & Permissions
+## 🧩 Architecture
 
-Permissions are defined in:
-```
-config/permissions.php
-```
-### Roles:
-
-- admin
-  - Full access (all actions)
-
-- technician
-  - View tickets
-  - Create tickets
-  - Edit tickets
-  - Export reports (CSV/PDF/HTML)
-  - Upload/download attachments
-  - Comment on tickets
-
-- reader
-  - View tickets
-  - View comments and attachments
-  - Export reports
+- MVC pattern (Controllers, Models, Views)
+- ViewContext for data flow
+- Helpers for security and utilities
+- SQLite database
 
 ---
 
-## Project Structure (Relevant Folders)
+## 🔐 Security Features
 
-- /config → configuration and database initialization
-- /db → seeds and database scripts
-- /storage/attachments → uploaded files (created automatically)
-- /app → MVC structure (controllers, models, views, helpers)
-- /public → index.php and assets (CSS, images, JS)
-
----
-
-## Storage Behavior
-
-- The folder /storage/attachments is created automatically when the first file is uploaded.
-- No need to manually create it.
+- CSRF protection
+- XSS prevention
+- Role-based access control
+- Login attempt blocking (5 attempts / 5 min)
+- Input validation
 
 ---
 
-## Troubleshooting
+## 👤 Roles & Permissions
 
-- Port 80 in use? Change Apache port in XAMPP settings  
-- MySQL not starting? Check if another MySQL instance is running  
-- 403 Forbidden error? Verify file permissions in htdocs folder  
+admin → full access  
+technician → manage tickets, comments, files, exports  
+reader → view + export only
+
+---
+
+## 🧠 Application Features
+
+### 🔑 Authentication
+
+- Login with brute-force protection
+- Warning on 4th failed attempt
+- Auto block after 5 attempts (5 minutes)
+
+### 📊 Dashboard
+
+- Ticket KPIs (status & priority)
+- Category & status distribution
+- Quick access filters (critical / unassigned)
+- Last update timestamp
+
+### 🎫 Ticket Management
+
+- List, filter and search tickets
+- Filters: status, priority, assigned user
+- Search: title / description / both
+- CSV export (filtered results)
+
+### 🔍 Ticket Detail
+
+- View full ticket info
+- Edit ticket (tracked changes)
+- Export HTML report
+- Export PDF report
+
+### 📎 Attachments
+
+- Upload allowed files (PDF, TXT, PNG)
+- File size validation
+- Secure storage
+- Download files
+
+### 💬 Comments
+
+- Add comments
+- View comment history
+
+### 🕓 History Tracking
+
+- Tracks changes in:
+  - status
+  - priority
+  - assigned user
+
+### 👥 Users
+
+- List users
+- Filter by role
+
+### 📜 Audit System
+
+Tracks:
+
+- Login / logout
+- Failed attempts & blocking
+- Ticket creation & updates
+- Comments
+- File uploads/downloads
+- Exports (CSV, PDF, HTML)
+- Dashboard access
+- Ticket searches
+- Password changes
+
+### ⚙️ Profile
+
+- View user data
+- Change password with validation:
+  - min length
+  - upper/lowercase
+  - number
+  - special char
+  - match confirmation
+
+---
+
+## 📂 Project Structure
+
+/config  
+/db  
+/storage/attachments  
+/app  
+/public
+
+---
+
+## 🧪 Troubleshooting
+
+- Check Apache/MySQL
+- Verify folder name
+- Ensure permissions on storage
+
+---
+
+## 🏁 Conclusion
+
+SecureDesk demonstrates a full-stack backend system with strong focus on:
+
+- Clean architecture
+- Security
+- Data integrity
+- Auditability
